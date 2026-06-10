@@ -1152,9 +1152,14 @@ tbody tr:hover td{background:#fafbff}
               </div>
             </div>
           </div>
-          <button class="btn btn-blue" onclick="saveConfig()">
-            <i class="fas fa-save"></i> Simpan Konfigurasi
-          </button>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <button class="btn btn-blue" onclick="saveConfig()">
+              <i class="fas fa-save"></i> Simpan Konfigurasi
+            </button>
+            <button class="btn btn-outline" onclick="testKoneksi()">
+              <i class="fas fa-plug"></i> Test Koneksi GAS
+            </button>
+          </div>
         </div>
 
       </div><!-- /admin-main -->
@@ -1222,20 +1227,42 @@ function setLoading(show, msg='Memproses...') {
 }
 
 // ─── CALL GAS ─────────────────────────────────────────────
+// ✅ GAS Web App harus dipanggil dengan Content-Type text/plain
+// agar tidak trigger CORS preflight OPTIONS yang GAS tidak handle.
+// Body tetap JSON string, dan GAS membacanya dari e.postData.contents
 async function callGAS(action, data={}) {
   const url = GAS_URL || localStorage.getItem('gas_url');
-  if (!url) { toast('GAS URL belum dikonfigurasi. Hubungi admin.','error'); return null; }
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action, ...data })
-    });
-    return await res.json();
-  } catch(e) {
-    toast('Koneksi gagal: ' + e.message, 'error');
+  if (!url) {
+    toast('GAS URL belum dikonfigurasi. Masuk Admin → Konfigurasi.','error');
     return null;
   }
+  try {
+    const body = JSON.stringify({ action, ...data });
+    const res  = await fetch(url, {
+      method:  'POST',
+      // text/plain mencegah CORS preflight — GAS tetap bisa baca body JSON
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body:    body
+    });
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch(parseErr) {
+      console.error('GAS response bukan JSON:', text);
+      toast('Respons server tidak valid. Cek GAS URL.', 'error');
+      return null;
+    }
+  } catch(e) {
+    console.error('callGAS error:', e);
+    toast('Koneksi ke server gagal: ' + e.message, 'error');
+    return null;
+  }
+}
+
+// ─── PING GAS (test koneksi) ──────────────────────────────
+async function pingGAS() {
+  const res = await callGAS('ping');
+  return res && res.success;
 }
 
 // ─── STATISTIK BERANDA ────────────────────────────────────
@@ -1800,6 +1827,20 @@ async function loadConfig() {
   document.getElementById('cfg_tahun').value      = d.tahun||'2025';
   document.getElementById('cfg_lahir_min').value  = d.batas_lahir_min||'2013-01-01';
   document.getElementById('cfg_lahir_max').value  = d.batas_lahir_max||'2018-12-31';
+}
+
+async function testKoneksi() {
+  const url = document.getElementById('cfg_gas_url').value.trim();
+  if (!url) { toast('Isi GAS URL dulu', 'error'); return; }
+  GAS_URL = url;
+  setLoading(true, 'Menguji koneksi ke GAS...');
+  const ok = await pingGAS();
+  setLoading(false);
+  if (ok) {
+    toast('✅ Koneksi GAS berhasil! Server aktif.', 'success');
+  } else {
+    toast('❌ Koneksi gagal. Periksa GAS URL dan pastikan sudah di-deploy ulang.', 'error');
+  }
 }
 
 async function saveConfig() {

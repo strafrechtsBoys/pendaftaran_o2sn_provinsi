@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pendaftaran O2SN SD – Provinsi DKI Jakarta 2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+/* ─── TOKENS ─────────────────────────────────────────────── */
+:root {
+  --merah:       #C1272D;
+  --merah-muda:  #F9E5E6;
+  --merah-hover: #A01E23;
+  --biru:        #003F8A;
+  --biru-muda:   #E8EFF9;
+  --emas:        #D4A017;
+  --emas-muda:   #FDF5E0;
+  --hijau:       #1A7A4A;
+  --hijau-muda:  #E3F5EC;
+  --abu:         #F4F6FA;
+  --teks:        #1A1F36;
+  --teks-2:      #5A607A;
+  --border:      #DDE2EE;
+  --putih:       #FFFFFF;
+  --shadow-sm:   0 1px 4px rgba(0,0,0,.06);
+  --shadow-md:   0 4px 16px rgba(0,0,0,.09);
+  --shadow-lg:   0 12px 40px rgba(0,0,0,.13);
+  --r-sm:        8px;
+  --r-md:        14px;
+  --r-lg:        20px;
+  --r-xl:        28px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  background:var(--abu);
+  color:var(--teks);
+  min-height:100vh;
+  font-size:14px;
+}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit}
+
+/* ─── HEADER ─────────────────────────────────────────────── */
+.site-header{
+  background:linear-gradient(135deg,var(--biru) 0%,#00276e 60%,#C1272D 100%);
+  padding:0;
+  position:sticky;top:0;z-index:50;
+  box-shadow:0 2px 12px rgba(0,0,0,.25);
+}
+.header-inner{
+  max-width:1100px;margin:0 auto;
+  padding:14px 24px;
+  display:flex;align-items:center;gap:16px;
+}
+.header-logo-wrap{display:flex;align-items:center;gap:14px;flex:1}
+.header-emblem{
+  width:52px;height:52px;
+  background:rgba(255,255,255,.15);
+  border:2px solid rgba(255,255,255,.3);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.header-emblem i{font-size:22px;color:#fff}
+.header-titles h1{
+  font-size:14px;font-weight:800;color:#fff;
+  text-transform:uppercase;letter-spacing:.5px;line-height:1.2;
+}
+.header-titles p{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px}
+.header-badge{
+  background:var(--emas);
+  color:#5a3600;
+  font-size:10px;font-weight:700;
+  padding:4px 10px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;
+}
+
+/* ─── LAYOUT ─────────────────────────────────────────────── */
+.page-wrap{max-width:1100px;margin:0 auto;padding:28px 16px 60px}
+
+/* ─── VIEWS ──────────────────────────────────────────────── */
+.view{display:none}
+.view.active{display:block}
+
+/* ─── HERO ───────────────────────────────────────────────── */
+.hero{
+  background:linear-gradient(135deg,var(--biru) 0%,#00276e 55%,#8B1A1F 100%);
+  border-radius:var(--r-xl);
+  padding:40px 36px;
+  color:#fff;
+  display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
+  margin-bottom:24px;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;
+  right:-80px;top:-80px;
+  width:280px;height:280px;
+  background:rgba(255,255,255,.05);
+  border-radius:50%;
+}
+.hero-keterangan{
+  font-size:11px;font-weight:600;
+  background:rgba(255,255,255,.18);
+  display:inline-block;padding:4px 12px;
+  border-radius:20px;letter-spacing:.5px;
+  text-transform:uppercase;margin-bottom:12px;
+}
+.hero h2{font-size:26px;font-weight:800;line-height:1.25;margin-bottom:10px}
+.hero p{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;max-width:480px}
+.hero-stats{
+  display:flex;flex-direction:column;gap:10px;
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:var(--r-lg);padding:20px;
+  min-width:160px;text-align:center;
+}
+.hero-stat-num{font-size:28px;font-weight:800;line-height:1}
+.hero-stat-lbl{font-size:10px;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.5px}
+.hero-actions{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 22px;border-radius:var(--r-md);
+  font-size:13px;font-weight:700;
+  border:none;transition:all .2s;
+}
+.btn-primary{background:var(--emas);color:#3d2000}
+.btn-primary:hover{background:#b88a0f;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.btn-ghost{background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.35)}
+.btn-ghost:hover{background:rgba(255,255,255,.25)}
+.btn-red{background:var(--merah);color:#fff}
+.btn-red:hover{background:var(--merah-hover);transform:translateY(-1px)}
+.btn-blue{background:var(--biru);color:#fff}
+.btn-blue:hover{background:#002e6e}
+.btn-green{background:var(--hijau);color:#fff}
+.btn-green:hover{background:#135c36}
+.btn-outline{background:#fff;color:var(--teks);border:1.5px solid var(--border)}
+.btn-outline:hover{border-color:var(--biru);color:var(--biru)}
+.btn-sm{padding:7px 14px;font-size:12px;border-radius:var(--r-sm)}
+.btn-full{width:100%;justify-content:center}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ─── CABOR GRID ─────────────────────────────────────────── */
+.cabor-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:12px;
+  margin-bottom:28px;
+}
+.cabor-card{
+  background:var(--putih);border:1.5px solid var(--border);
+  border-radius:var(--r-md);padding:16px 10px;
+  text-align:center;transition:all .2s;
+}
+.cabor-card:hover{border-color:var(--biru);box-shadow:var(--shadow-md)}
+.cabor-icon{font-size:26px;margin-bottom:8px;display:block}
+.cabor-name{font-size:12px;font-weight:700;margin-bottom:4px}
+.cabor-count{font-size:10px;color:var(--teks-2);background:var(--abu);
+  border-radius:20px;padding:2px 8px;display:inline-block}
+
+/* ─── SECTION ────────────────────────────────────────────── */
+.section{background:var(--putih);border-radius:var(--r-lg);
+  border:1.5px solid var(--border);margin-bottom:20px}
+.section-head{
+  padding:18px 24px;border-bottom:1.5px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+.section-head-icon{
+  width:36px;height:36px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.section-head-title{font-size:15px;font-weight:700}
+.section-head-sub{font-size:12px;color:var(--teks-2);margin-top:1px}
+.section-body{padding:24px}
+
+/* ─── FORM ───────────────────────────────────────────────── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+.col-span-2{grid-column:span 2}
+.col-span-3{grid-column:span 3}
+.form-group{display:flex;flex-direction:column;gap:6px}
+label{font-size:12px;font-weight:600;color:var(--teks-2);text-transform:uppercase;letter-spacing:.4px}
+label .req{color:var(--merah)}
+.form-control{
+  padding:11px 14px;border:1.5px solid var(--border);
+  border-radius:var(--r-sm);font-size:13px;
+  background:var(--putih);color:var(--teks);
+  transition:border-color .2s,box-shadow .2s;outline:none;
+}
+.form-control:focus{border-color:var(--biru);box-shadow:0 0 0 3px rgba(0,63,138,.1)}
+.form-control.error{border-color:var(--merah);background:var(--merah-muda)}
+.form-hint{font-size:11px;color:var(--teks-2)}
+.form-error{font-size:11px;color:var(--merah);font-weight:600;display:none}
+.form-error.show{display:block}
+
+/* ─── UPLOAD ZONE ────────────────────────────────────────── */
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.upload-item{
+  border:2px dashed var(--border);border-radius:var(--r-md);
+  padding:20px;text-align:center;transition:all .2s;cursor:pointer;
+  position:relative;
+}
+.upload-item:hover,.upload-item.drag-over{
+  border-color:var(--biru);background:var(--biru-muda);
+}
+.upload-item.done{border-style:solid;border-color:var(--hijau);background:var(--hijau-muda)}
+.upload-item.done .upload-icon{color:var(--hijau)}
+.upload-icon{font-size:28px;color:var(--teks-2);margin-bottom:8px}
+.upload-label{font-size:12px;font-weight:700;margin-bottom:4px}
+.upload-hint{font-size:10px;color:var(--teks-2)}
+.upload-status{font-size:11px;font-weight:600;color:var(--hijau);margin-top:6px;display:none}
+.upload-item.done .upload-status{display:block}
+.upload-item input[type=file]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
+}
+
+/* ─── STEP INDICATOR ─────────────────────────────────────── */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:28px}
+.step{display:flex;align-items:center;flex:1}
+.step-num{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;flex-shrink:0;
+  border:2px solid var(--border);background:var(--putih);color:var(--teks-2);
+  transition:all .3s;
+}
+.step.active .step-num,.step.done .step-num{
+  background:var(--biru);border-color:var(--biru);color:#fff;
+}
+.step.done .step-num{background:var(--hijau);border-color:var(--hijau)}
+.step-label{font-size:11px;color:var(--teks-2);margin-left:8px;white-space:nowrap;
+  font-weight:600}
+.step.active .step-label{color:var(--biru)}
+.step-line{flex:1;height:2px;background:var(--border);margin:0 8px}
+.step.done + .step .step-line, .step-line.done{background:var(--hijau)}
+
+/* ─── KATEGORI CABOR ─────────────────────────────────────── */
+.kategori-box{
+  background:var(--biru-muda);border:1.5px solid #bdd0f0;
+  border-radius:var(--r-md);padding:16px;
+}
+.kategori-box .label{font-size:11px;font-weight:700;color:var(--biru);
+  text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
+.check-list{display:flex;flex-wrap:wrap;gap:8px}
+.check-item{
+  display:flex;align-items:center;gap:6px;
+  background:#fff;border:1.5px solid #bdd0f0;
+  border-radius:20px;padding:6px 12px;font-size:12px;cursor:pointer;
+  transition:all .2s;user-select:none;
+}
+.check-item:hover{border-color:var(--biru)}
+.check-item input{display:none}
+.check-item.checked{background:var(--biru);color:#fff;border-color:var(--biru)}
+
+/* ─── KODE VERIFIKASI (sukses) ───────────────────────────── */
+.success-card{
+  background:linear-gradient(135deg,var(--hijau) 0%,#0d5c37 100%);
+  border-radius:var(--r-xl);padding:36px;color:#fff;text-align:center;
+}
+.success-icon{font-size:56px;margin-bottom:16px}
+.success-kode{
+  font-family:'DM Mono',monospace;
+  font-size:28px;font-weight:500;
+  background:rgba(255,255,255,.15);
+  border:2px dashed rgba(255,255,255,.4);
+  border-radius:var(--r-md);
+  padding:14px 28px;display:inline-block;margin:16px 0;
+  letter-spacing:4px;
+}
+.success-nomor{
+  font-family:'DM Mono',monospace;
+  font-size:18px;color:rgba(255,255,255,.85);margin-bottom:24px;
+}
+.print-area{display:none}
+
+/* ─── STATUS BADGE ───────────────────────────────────────── */
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;
+}
+.badge-pending{background:var(--emas-muda);color:#7a5200}
+.badge-ok{background:var(--hijau-muda);color:var(--hijau)}
+.badge-perbaikan{background:var(--merah-muda);color:var(--merah)}
+
+/* ─── CEK STATUS VIEW ─────────────────────────────────────── */
+.status-card{
+  background:var(--putih);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);padding:24px;
+}
+.status-doc-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;
+}
+.status-doc-row:last-child{border-bottom:none}
+
+/* ─── ADMIN DASHBOARD ────────────────────────────────────── */
+.admin-sidebar{
+  width:220px;flex-shrink:0;
+  background:var(--biru);
+  border-radius:var(--r-lg);
+  padding:20px 0;
+  position:sticky;top:80px;height:fit-content;
+}
+.admin-sidebar .logo-area{
+  padding:0 20px 16px;
+  border-bottom:1px solid rgba(255,255,255,.15);
+  margin-bottom:8px;
+}
+.admin-sidebar .logo-area h3{font-size:13px;font-weight:700;color:#fff}
+.admin-sidebar .logo-area p{font-size:10px;color:rgba(255,255,255,.6);margin-top:2px}
+.sidebar-menu{list-style:none}
+.sidebar-menu li a{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 20px;font-size:12px;font-weight:600;color:rgba(255,255,255,.75);
+  transition:all .2s;border-left:3px solid transparent;
+}
+.sidebar-menu li a:hover{background:rgba(255,255,255,.1);color:#fff}
+.sidebar-menu li a.active{
+  background:rgba(255,255,255,.15);color:#fff;
+  border-left-color:var(--emas);
+}
+.sidebar-menu li a i{width:16px;text-align:center}
+.admin-layout{display:flex;gap:20px;align-items:flex-start}
+.admin-main{flex:1;min-width:0}
+.admin-tab{display:none}
+.admin-tab.active{display:block}
+
+/* ─── STAT CARDS ─────────────────────────────────────────── */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+.stat-card{
+  background:var(--putih);border:1.5px solid var(--border);
+  border-radius:var(--r-md);padding:18px;
+}
+.stat-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.stat-card-icon{
+  width:38px;height:38px;border-radius:var(--r-sm);
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+}
+.stat-num{font-size:28px;font-weight:800;line-height:1}
+.stat-lbl{font-size:11px;color:var(--teks-2);margin-top:2px}
+
+/* ─── TABLE ──────────────────────────────────────────────── */
+.table-wrap{overflow-x:auto;border-radius:var(--r-md);border:1.5px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{background:var(--abu)}
+th{padding:10px 12px;text-align:left;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.5px;color:var(--teks-2);
+  border-bottom:1.5px solid var(--border);}
+td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--teks);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:#fafbff}
+.mono{font-family:'DM Mono',monospace;font-size:11px}
+
+/* ─── FILTER BAR ─────────────────────────────────────────── */
+.filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  background:var(--putih);border:1.5px solid var(--border);
+  border-radius:var(--r-md);padding:14px 16px;margin-bottom:14px;
+}
+.filter-bar select,.filter-bar input{
+  padding:7px 12px;border:1.5px solid var(--border);
+  border-radius:var(--r-sm);font-size:12px;font-family:inherit;outline:none;
+  background:var(--putih);
+}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--biru)}
+
+/* ─── DOC VIEWER LINKS ───────────────────────────────────── */
+.doc-link{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:11px;color:var(--biru);font-weight:600;
+}
+.doc-link:hover{text-decoration:underline}
+.doc-missing{font-size:11px;color:var(--teks-2)}
+
+/* ─── MODAL ──────────────────────────────────────────────── */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);
+  backdrop-filter:blur(4px);
+  z-index:200;display:flex;align-items:center;justify-content:center;
+  padding:16px;display:none;
+}
+.modal-bg.open{display:flex}
+.modal-box{
+  background:var(--putih);border-radius:var(--r-xl);
+  max-width:480px;width:100%;
+  padding:32px;box-shadow:var(--shadow-lg);
+  max-height:90vh;overflow-y:auto;
+}
+.modal-box.wide{max-width:700px}
+
+/* ─── LOADING ────────────────────────────────────────────── */
+.loading-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);
+  z-index:300;display:none;align-items:center;justify-content:center;
+  flex-direction:column;gap:14px;
+}
+.loading-overlay.show{display:flex}
+.spinner{
+  width:44px;height:44px;border:4px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay p{color:#fff;font-size:13px;font-weight:600}
+
+/* ─── TOAST ──────────────────────────────────────────────── */
+.toast{
+  position:fixed;bottom:28px;right:28px;z-index:400;
+  background:var(--teks);color:#fff;
+  padding:12px 20px;border-radius:var(--r-md);
+  font-size:13px;font-weight:600;
+  box-shadow:var(--shadow-lg);
+  transform:translateY(20px);opacity:0;
+  transition:all .3s;pointer-events:none;
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:var(--hijau)}
+.toast.error{background:var(--merah)}
+
+/* ─── ADMIN LOGIN ────────────────────────────────────────── */
+.admin-login-wrap{
+  max-width:400px;margin:60px auto;
+  background:var(--putih);border:1.5px solid var(--border);
+  border-radius:var(--r-xl);padding:40px;
+}
+
+/* ─── CONFIG FORM ────────────────────────────────────────── */
+.config-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media(max-width:768px){
+  .hero{grid-template-columns:1fr;text-align:center}
+  .hero-stats{flex-direction:row;justify-content:center}
+  .hero p{max-width:100%}
+  .form-grid,.form-grid.cols-3{grid-template-columns:1fr}
+  .col-span-2,.col-span-3{grid-column:span 1}
+  .cabor-grid{grid-template-columns:repeat(3,1fr)}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .upload-grid{grid-template-columns:1fr}
+  .admin-layout{flex-direction:column}
+  .admin-sidebar{width:100%;position:static}
+  .config-grid{grid-template-columns:1fr}
+}
+
+/* ─── PRINT ──────────────────────────────────────────────── */
+@media print{
+  body *{visibility:hidden}
+  .print-area,
+  .print-area *{visibility:visible}
+  .print-area{
+    position:fixed;inset:0;
+    background:#fff;padding:20px;
+    font-family:'Plus Jakarta Sans',sans-serif;
+  }
+  @page{margin:1.5cm;size:A4}
+}
+
+/* ─── MISC ───────────────────────────────────────────────── */
+.divider{height:1px;background:var(--border);margin:20px 0}
+.text-sm{font-size:12px}
+.text-xs{font-size:11px}
+.text-muted{color:var(--teks-2)}
+.text-center{text-align:center}
+.text-right{text-align:right}
+.font-mono{font-family:'DM Mono',monospace}
+.fw-700{font-weight:700}
+.fw-800{font-weight:800}
+.mb-4{margin-bottom:4px}
+.mb-8{margin-bottom:8px}
+.mb-16{margin-bottom:16px}
+.mb-24{margin-bottom:24px}
+.mt-16{margin-top:16px}
+.mt-24{margin-top:24px}
+.gap-8{gap:8px}
+.flex{display:flex}
+.flex-center{display:flex;align-items:center}
+.flex-between{display:flex;align-items:center;justify-content:space-between}
+.flex-wrap{flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOADING OVERLAY ═══════════════════════════════════ -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p id="loadingText">Memproses...</p>
+</div>
+
+<!-- ═══ TOAST ════════════════════════════════════════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══ HEADER ═══════════════════════════════════════════ -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-logo-wrap">
+      <div class="header-emblem"><i class="fas fa-medal"></i></div>
+      <div class="header-titles">
+        <h1>O2SN SD – Provinsi DKI Jakarta 2025</h1>
+        <p>Olimpiade Olahraga Siswa Nasional · Tingkat Provinsi</p>
+      </div>
+    </div>
+    <button onclick="showView('admin-login')" title="Admin Login" style="background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,255,255,0.35);color:#fff;font-size:11px;font-weight:700;cursor:pointer;padding:7px 14px;border-radius:8px;display:flex;align-items:center;gap:6px;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+      <i class="fas fa-lock"></i> Admin
+    </button>
+  </div>
+</header>
+
+<!-- ═══ MAIN WRAPPER ══════════════════════════════════════ -->
+<div class="page-wrap" id="appRoot">
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  VIEW: BERANDA PUBLIK                        ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <div class="view active" id="view-beranda">
+    <!-- Hero -->
+    <div class="hero">
+      <div>
+        <span class="hero-keterangan">Pendaftaran Terbuka</span>
+        <h2>Portal Resmi Pendaftaran<br>Atlet O2SN SD 2025</h2>
+        <p>Pendaftaran online atlet Olimpiade Olahraga Siswa Nasional tingkat Sekolah Dasar Provinsi DKI Jakarta. Semua berkas wajib diunggah secara digital.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="showView('form-daftar')">
+            <i class="fas fa-user-plus"></i> Daftar Sekarang
+          </button>
+          <button class="btn btn-ghost" onclick="showView('cek-status')">
+            <i class="fas fa-search"></i> Cek Status Pendaftaran
+          </button>
+        </div>
+      </div>
+      <div class="hero-stats" id="heroStats">
+        <div>
+          <div class="hero-stat-num" id="totalAtlet">–</div>
+          <div class="hero-stat-lbl">Total Atlet</div>
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,.2)"></div>
+        <div>
+          <div class="hero-stat-num" id="totalCabor">5</div>
+          <div class="hero-stat-lbl">Cabor</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cabor Grid -->
+    <div class="cabor-grid">
+      <div class="cabor-card">
+        <span class="cabor-icon">🏊</span>
+        <div class="cabor-name">Renang</div>
+        <span class="cabor-count" id="cnt-Renang">0 Atlet</span>
+      </div>
+      <div class="cabor-card">
+        <span class="cabor-icon">🏃</span>
+        <div class="cabor-name">Atletik</div>
+        <span class="cabor-count" id="cnt-Atletik">0 Atlet</span>
+      </div>
+      <div class="cabor-card">
+        <span class="cabor-icon">🏸</span>
+        <div class="cabor-name">Bulutangkis</div>
+        <span class="cabor-count" id="cnt-Bulutangkis">0 Atlet</span>
+      </div>
+      <div class="cabor-card">
+        <span class="cabor-icon">🥋</span>
+        <div class="cabor-name">Pencak Silat</div>
+        <span class="cabor-count" id="cnt-Pencak Silat">0 Atlet</span>
+      </div>
+      <div class="cabor-card">
+        <span class="cabor-icon">🤸</span>
+        <div class="cabor-name">Senam</div>
+        <span class="cabor-count" id="cnt-Senam">0 Atlet</span>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="section">
+      <div class="section-head">
+        <div class="section-head-icon" style="background:var(--emas-muda);color:var(--emas)"><i class="fas fa-info-circle"></i></div>
+        <div>
+          <div class="section-head-title">Informasi Pendaftaran</div>
+          <div class="section-head-sub">Baca sebelum mendaftar</div>
+        </div>
+      </div>
+      <div class="section-body">
+        <div class="form-grid">
+          <div>
+            <div class="fw-700 mb-8" style="color:var(--biru)"><i class="fas fa-users me-1"></i> Syarat Peserta</div>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:6px">
+              <li class="text-sm flex-center gap-8"><i class="fas fa-check-circle" style="color:var(--hijau)"></i> Siswa aktif Sekolah Dasar di DKI Jakarta</li>
+              <li class="text-sm flex-center gap-8"><i class="fas fa-check-circle" style="color:var(--hijau)"></i> Lahir tahun 2013 – 2018</li>
+              <li class="text-sm flex-center gap-8"><i class="fas fa-check-circle" style="color:var(--hijau)"></i> Memiliki NISN aktif (10 digit)</li>
+              <li class="text-sm flex-center gap-8"><i class="fas fa-check-circle" style="color:var(--hijau)"></i> 1 peserta hanya boleh mendaftar 1 cabor</li>
+            </ul>
+          </div>
+          <div>
+            <div class="fw-700 mb-8" style="color:var(--merah)"><i class="fas fa-file-alt"></i> Dokumen Wajib (PDF, max 2MB)</div>
+            <ul style="list-style:none;display:flex;flex-direction:column;gap:6px">
+              <li class="text-sm flex-center gap-8"><i class="fas fa-file-pdf" style="color:var(--merah)"></i> Bukti Pendaftaran BPTI</li>
+              <li class="text-sm flex-center gap-8"><i class="fas fa-file-pdf" style="color:var(--merah)"></i> BPJS Ketenagakerjaan</li>
+              <li class="text-sm flex-center gap-8"><i class="fas fa-file-pdf" style="color:var(--merah)"></i> Surat Keterangan dari Sekolah</li>
+              <li class="text-sm flex-center gap-8"><i class="fas fa-file-pdf" style="color:var(--merah)"></i> Akta Kelahiran</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer copyright -->
+    <div style="text-align:center;margin-top:48px;padding-top:20px;border-top:1px solid var(--border)">
+      <p style="font-size:11px;color:var(--teks-2)">© 2026 <strong>KKG PJOK Provinsi DKI Jakarta</strong>. Hak cipta dilindungi.</p>
+    </div>
+  </div>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  VIEW: FORM PENDAFTARAN                      ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <div class="view" id="view-form-daftar">
+    <div class="flex-between mb-24">
+      <div>
+        <div class="text-xs text-muted mb-4">Pendaftaran Online</div>
+        <h2 class="fw-800" style="font-size:20px">Form Pendaftaran Atlet</h2>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="showView('beranda')">
+        <i class="fas fa-arrow-left"></i> Kembali
+      </button>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps mb-24">
+      <div class="step active" id="step-1">
+        <div class="step-num">1</div>
+        <div class="step-label">Data Pribadi</div>
+      </div>
+      <div class="step-line" id="line-1"></div>
+      <div class="step" id="step-2">
+        <div class="step-num">2</div>
+        <div class="step-label">Data Sekolah</div>
+      </div>
+      <div class="step-line" id="line-2"></div>
+      <div class="step" id="step-3">
+        <div class="step-num">3</div>
+        <div class="step-label">Cabor & Upload</div>
+      </div>
+      <div class="step-line" id="line-3"></div>
+      <div class="step" id="step-4">
+        <div class="step-num">4</div>
+        <div class="step-label">Selesai</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: DATA PRIBADI -->
+    <div id="formStep1">
+      <div class="section">
+        <div class="section-head">
+          <div class="section-head-icon" style="background:var(--biru-muda);color:var(--biru)"><i class="fas fa-user"></i></div>
+          <div>
+            <div class="section-head-title">Data Pribadi Peserta</div>
+            <div class="section-head-sub">Isi data sesuai akta kelahiran</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>NISN <span class="req">*</span></label>
+              <input type="text" id="f_nisn" class="form-control" placeholder="10 digit NISN" maxlength="10" inputmode="numeric">
+              <div class="form-hint">Nomor Induk Siswa Nasional (10 digit angka)</div>
+              <div class="form-error" id="err_nisn"></div>
+            </div>
+            <div class="form-group">
+              <label>Tanggal Lahir <span class="req">*</span></label>
+              <input type="date" id="f_tgl_lahir" class="form-control">
+              <div class="form-hint">Peserta lahir antara 2013 – 2018</div>
+              <div class="form-error" id="err_tgl_lahir"></div>
+            </div>
+            <div class="form-group col-span-2">
+              <label>Nama Lengkap <span class="req">*</span></label>
+              <input type="text" id="f_nama" class="form-control" placeholder="Nama sesuai akta kelahiran (huruf kapital)">
+              <div class="form-error" id="err_nama"></div>
+            </div>
+            <div class="form-group">
+              <label>Jenis Kelamin <span class="req">*</span></label>
+              <select id="f_gender" class="form-control">
+                <option value="">— Pilih —</option>
+                <option value="Putra">Putra</option>
+                <option value="Putri">Putri</option>
+              </select>
+              <div class="form-error" id="err_gender"></div>
+            </div>
+            <div class="form-group">
+              <label>No. HP Orang Tua / Wali <span class="req">*</span></label>
+              <input type="tel" id="f_hp_ortu" class="form-control" placeholder="08xxxxxxxxxx" inputmode="tel">
+              <div class="form-error" id="err_hp_ortu"></div>
+            </div>
+          </div>
+          <div class="mt-24 text-right">
+            <button class="btn btn-blue" onclick="nextStep(1)">
+              Lanjut <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: DATA SEKOLAH -->
+    <div id="formStep2" style="display:none">
+      <div class="section">
+        <div class="section-head">
+          <div class="section-head-icon" style="background:#fff3e0;color:#e65100"><i class="fas fa-school"></i></div>
+          <div>
+            <div class="section-head-title">Data Sekolah & Pendamping</div>
+            <div class="section-head-sub">Informasi asal sekolah dan kontak pendamping</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="form-grid">
+            <div class="form-group col-span-2">
+              <label>Nama Sekolah <span class="req">*</span></label>
+              <input type="text" id="f_sekolah" class="form-control" placeholder="Contoh: SDN Ulujami 06 Pagi">
+              <div class="form-error" id="err_sekolah"></div>
+            </div>
+            <div class="form-group">
+              <label>NPSN <span class="req">*</span></label>
+              <input type="text" id="f_npsn" class="form-control" placeholder="8 digit NPSN" maxlength="8" inputmode="numeric">
+              <div class="form-error" id="err_npsn"></div>
+            </div>
+            <div class="form-group">
+              <label>Asal Wilayah <span class="req">*</span></label>
+              <select id="f_wilayah" class="form-control">
+                <option value="">— Pilih Wilayah —</option>
+                <option>Jakarta Utara 1</option>
+                <option>Jakarta Utara 2</option>
+                <option>Jakarta Barat 1</option>
+                <option>Jakarta Barat 2</option>
+                <option>Jakarta Selatan 1</option>
+                <option>Jakarta Selatan 2</option>
+                <option>Jakarta Pusat 1</option>
+                <option>Jakarta Pusat 2</option>
+                <option>Jakarta Timur 1</option>
+                <option>Jakarta Timur 2</option>
+                <option>Kepulauan Seribu</option>
+              </select>
+              <div class="form-error" id="err_wilayah"></div>
+            </div>
+            <div class="form-group col-span-2" style="height:1px;background:var(--border);margin:4px 0"></div>
+            <div class="form-group col-span-2">
+              <label>Nama Guru Pendamping / Pelatih <span class="req">*</span></label>
+              <input type="text" id="f_pendamping" class="form-control" placeholder="Nama lengkap pendamping">
+              <div class="form-error" id="err_pendamping"></div>
+            </div>
+            <div class="form-group col-span-2">
+              <label>No. HP Pendamping / Pelatih <span class="req">*</span></label>
+              <input type="tel" id="f_hp_pendamping" class="form-control" placeholder="08xxxxxxxxxx" inputmode="tel">
+              <div class="form-error" id="err_hp_pendamping"></div>
+            </div>
+          </div>
+          <div class="mt-24 flex-between">
+            <button class="btn btn-outline" onclick="prevStep(2)">
+              <i class="fas fa-arrow-left"></i> Kembali
+            </button>
+            <button class="btn btn-blue" onclick="nextStep(2)">
+              Lanjut <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: CABOR + UPLOAD -->
+    <div id="formStep3" style="display:none">
+      <div class="section mb-16">
+        <div class="section-head">
+          <div class="section-head-icon" style="background:var(--merah-muda);color:var(--merah)"><i class="fas fa-trophy"></i></div>
+          <div>
+            <div class="section-head-title">Cabang Olahraga</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="form-grid">
+            <div class="form-group col-span-2">
+              <label>Pilih Cabor <span class="req">*</span></label>
+              <select id="f_cabor" class="form-control" onchange="updateKategori()">
+                <option value="">— Pilih Cabor —</option>
+                <option value="Renang">Renang</option>
+                <option value="Atletik">Atletik</option>
+                <option value="Bulutangkis">Bulutangkis</option>
+                <option value="Pencak Silat">Pencak Silat</option>
+                <option value="Senam">Senam</option>
+              </select>
+              <div class="form-error" id="err_cabor"></div>
+            </div>
+          </div>
+          <div id="kategoriBox" class="kategori-box mt-16" style="display:none">
+            <div class="label"><i class="fas fa-list-check"></i> Pilih Kategori / Nomor Lomba</div>
+            <div class="check-list" id="kategoriList"></div>
+            <div class="form-error" id="err_kategori" style="margin-top:8px"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div class="section-head-icon" style="background:var(--hijau-muda);color:var(--hijau)"><i class="fas fa-cloud-upload-alt"></i></div>
+          <div>
+            <div class="section-head-title">Upload Dokumen</div>
+            <div class="section-head-sub">Format PDF · Maksimal 2MB per file</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="upload-grid">
+            <div class="upload-item" id="zone-bpti" onclick="triggerUpload('file-bpti')">
+              <input type="file" id="file-bpti" accept=".pdf" onchange="handleFile(event,'bpti')">
+              <div class="upload-icon"><i class="fas fa-file-invoice"></i></div>
+              <div class="upload-label">Bukti Pendaftaran BPTI</div>
+              <div class="upload-hint">Wajib · PDF max 2MB</div>
+              <div class="upload-status" id="status-bpti"><i class="fas fa-check-circle"></i> Terupload</div>
+            </div>
+            <div class="upload-item" id="zone-bpjs" onclick="triggerUpload('file-bpjs')">
+              <input type="file" id="file-bpjs" accept=".pdf" onchange="handleFile(event,'bpjs')">
+              <div class="upload-icon"><i class="fas fa-id-card"></i></div>
+              <div class="upload-label">BPJS Ketenagakerjaan</div>
+              <div class="upload-hint">Wajib · PDF max 2MB</div>
+              <div class="upload-status" id="status-bpjs"><i class="fas fa-check-circle"></i> Terupload</div>
+            </div>
+            <div class="upload-item" id="zone-surat" onclick="triggerUpload('file-surat')">
+              <input type="file" id="file-surat" accept=".pdf" onchange="handleFile(event,'surat')">
+              <div class="upload-icon"><i class="fas fa-file-alt"></i></div>
+              <div class="upload-label">Surat Keterangan Sekolah</div>
+              <div class="upload-hint">Wajib · PDF max 2MB</div>
+              <div class="upload-status" id="status-surat"><i class="fas fa-check-circle"></i> Terupload</div>
+            </div>
+            <div class="upload-item" id="zone-akte" onclick="triggerUpload('file-akte')">
+              <input type="file" id="file-akte" accept=".pdf" onchange="handleFile(event,'akte')">
+              <div class="upload-icon"><i class="fas fa-baby"></i></div>
+              <div class="upload-label">Akta Kelahiran</div>
+              <div class="upload-hint">Wajib · PDF max 2MB</div>
+              <div class="upload-status" id="status-akte"><i class="fas fa-check-circle"></i> Terupload</div>
+            </div>
+          </div>
+          <div class="form-error" id="err_upload" style="margin-top:12px"></div>
+        </div>
+      </div>
+
+      <div class="mt-16 flex-between">
+        <button class="btn btn-outline" onclick="prevStep(3)">
+          <i class="fas fa-arrow-left"></i> Kembali
+        </button>
+        <button class="btn btn-red" onclick="submitForm()">
+          <i class="fas fa-paper-plane"></i> Kirim Pendaftaran
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 4: SUKSES -->
+    <div id="formStep4" style="display:none">
+      <div class="success-card">
+        <div class="success-icon">🎉</div>
+        <h2 class="fw-800" style="font-size:22px;margin-bottom:8px">Pendaftaran Berhasil!</h2>
+        <p style="color:rgba(255,255,255,.85);font-size:13px;margin-bottom:16px">Simpan kode verifikasi di bawah ini. Kode ini digunakan untuk cek status pendaftaran Anda.</p>
+        <div class="success-kode" id="resultKode">--------</div>
+        <div class="success-nomor" id="resultNomor">Nomor Peserta: –</div>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-outline" onclick="printBukti()">
+            <i class="fas fa-print"></i> Cetak Bukti
+          </button>
+          <button class="btn btn-ghost" onclick="showView('beranda')">
+            <i class="fas fa-home"></i> Kembali ke Beranda
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  VIEW: CEK STATUS                            ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <div class="view" id="view-cek-status">
+    <div class="flex-between mb-24">
+      <div>
+        <div class="text-xs text-muted mb-4">Peserta</div>
+        <h2 class="fw-800" style="font-size:20px">Cek Status Pendaftaran</h2>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="showView('beranda')">
+        <i class="fas fa-arrow-left"></i> Kembali
+      </button>
+    </div>
+    <div style="max-width:480px">
+      <div class="section mb-16">
+        <div class="section-body">
+          <div class="form-group">
+            <label>Kode Verifikasi</label>
+            <input type="text" id="inputKodeVer" class="form-control font-mono" placeholder="Contoh: AB3K7XYZ" style="letter-spacing:3px;text-transform:uppercase" maxlength="8">
+          </div>
+          <button class="btn btn-blue btn-full mt-16" onclick="cekStatus()">
+            <i class="fas fa-search"></i> Cek Status
+          </button>
+        </div>
+      </div>
+      <div id="statusResult" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  VIEW: ADMIN LOGIN                           ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <div class="view" id="view-admin-login">
+    <div class="admin-login-wrap">
+      <div class="text-center mb-24">
+        <div style="width:60px;height:60px;background:var(--biru);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+          <i class="fas fa-user-shield" style="font-size:24px;color:#fff"></i>
+        </div>
+        <h2 class="fw-800" style="font-size:20px">Admin Login</h2>
+        <p class="text-sm text-muted mt-4">O2SN SD Provinsi DKI Jakarta 2025</p>
+      </div>
+      <div class="form-group mb-16">
+        <label>Username</label>
+        <input type="text" id="adminUsername" class="form-control" placeholder="Username admin">
+      </div>
+      <div class="form-group mb-24">
+        <label>Password</label>
+        <input type="password" id="adminPassword" class="form-control" placeholder="Password"
+          onkeydown="if(event.key==='Enter') adminLogin()">
+      </div>
+      <button class="btn btn-blue btn-full" onclick="adminLogin()">
+        <i class="fas fa-sign-in-alt"></i> Masuk
+      </button>
+      <div class="text-center mt-16">
+        <button class="btn btn-outline btn-sm" onclick="showView('beranda')">
+          <i class="fas fa-arrow-left"></i> Kembali
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ╔══════════════════════════════════════════════╗ -->
+  <!-- ║  VIEW: ADMIN DASHBOARD                       ║ -->
+  <!-- ╚══════════════════════════════════════════════╝ -->
+  <div class="view" id="view-admin-dashboard">
+    <div class="admin-layout">
+      <!-- Sidebar -->
+      <nav class="admin-sidebar">
+        <div class="logo-area">
+          <h3>Admin Panel</h3>
+          <p id="adminNameDisplay">–</p>
+        </div>
+        <ul class="sidebar-menu">
+          <li><a href="#" class="active" onclick="adminTab('dashboard',this)"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="#" onclick="adminTab('peserta',this)"><i class="fas fa-users"></i> Data Peserta</a></li>
+          <li><a href="#" onclick="adminTab('verifikasi',this)"><i class="fas fa-tasks"></i> Verifikasi Berkas</a></li>
+          <li><a href="#" onclick="adminTab('konfigurasi',this)"><i class="fas fa-cog"></i> Konfigurasi</a></li>
+          <li><a href="#" onclick="doExport()"><i class="fas fa-file-excel"></i> Export Excel</a></li>
+          <li style="margin-top:auto"><a href="#" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+        </ul>
+      </nav>
+
+      <!-- Main content -->
+      <div class="admin-main">
+
+        <!-- TAB: DASHBOARD -->
+        <div class="admin-tab active" id="tab-dashboard">
+          <h3 class="fw-800 mb-16" style="font-size:18px">Ringkasan Data</h3>
+          <div class="stat-grid" id="statGrid">
+            <div class="stat-card">
+              <div class="stat-card-top">
+                <div class="stat-card-icon" style="background:var(--biru-muda);color:var(--biru)"><i class="fas fa-users"></i></div>
+              </div>
+              <div class="stat-num" id="s_total">–</div>
+              <div class="stat-lbl">Total Peserta</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-top">
+                <div class="stat-card-icon" style="background:var(--emas-muda);color:var(--emas)"><i class="fas fa-clock"></i></div>
+              </div>
+              <div class="stat-num" id="s_pending">–</div>
+              <div class="stat-lbl">Pending Verifikasi</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-top">
+                <div class="stat-card-icon" style="background:var(--hijau-muda);color:var(--hijau)"><i class="fas fa-check-double"></i></div>
+              </div>
+              <div class="stat-num" id="s_verified">–</div>
+              <div class="stat-lbl">Terverifikasi</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-top">
+                <div class="stat-card-icon" style="background:var(--merah-muda);color:var(--merah)"><i class="fas fa-exclamation-triangle"></i></div>
+              </div>
+              <div class="stat-num" id="s_perbaikan">–</div>
+              <div class="stat-lbl">Perlu Perbaikan</div>
+            </div>
+          </div>
+          <!-- Per Wilayah -->
+          <div class="section">
+            <div class="section-head">
+              <div class="section-head-icon" style="background:var(--biru-muda);color:var(--biru)"><i class="fas fa-map-marker-alt"></i></div>
+              <div><div class="section-head-title">Rekapitulasi per Wilayah</div></div>
+            </div>
+            <div class="section-body" id="wilayahRecap">
+              <p class="text-sm text-muted">Memuat data...</p>
+            </div>
+          </div>
+          <!-- Per Cabor -->
+          <div class="section">
+            <div class="section-head">
+              <div class="section-head-icon" style="background:var(--merah-muda);color:var(--merah)"><i class="fas fa-trophy"></i></div>
+              <div><div class="section-head-title">Rekapitulasi per Cabor</div></div>
+            </div>
+            <div class="section-body" id="caborRecap">
+              <p class="text-sm text-muted">Memuat data...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB: PESERTA -->
+        <div class="admin-tab" id="tab-peserta">
+          <div class="flex-between mb-16">
+            <h3 class="fw-800" style="font-size:18px">Data Peserta</h3>
+          </div>
+          <div class="filter-bar">
+            <select id="flt_wilayah" onchange="loadPeserta()">
+              <option value="all">Semua Wilayah</option>
+              <option>Jakarta Utara 1</option><option>Jakarta Utara 2</option>
+              <option>Jakarta Barat 1</option><option>Jakarta Barat 2</option>
+              <option>Jakarta Selatan 1</option><option>Jakarta Selatan 2</option>
+              <option>Jakarta Pusat 1</option><option>Jakarta Pusat 2</option>
+              <option>Jakarta Timur 1</option><option>Jakarta Timur 2</option>
+              <option>Kepulauan Seribu</option>
+            </select>
+            <select id="flt_cabor" onchange="loadPeserta()">
+              <option value="all">Semua Cabor</option>
+              <option>Renang</option><option>Atletik</option>
+              <option>Bulutangkis</option><option>Pencak Silat</option><option>Senam</option>
+            </select>
+            <select id="flt_status" onchange="loadPeserta()">
+              <option value="all">Semua Status</option>
+              <option>Pending</option>
+              <option>Terverifikasi</option>
+              <option>Perlu Perbaikan</option>
+            </select>
+            <input type="text" id="flt_search" placeholder="Cari nama / NISN..." oninput="filterTableClient()" style="flex:1;min-width:160px">
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No. Peserta</th>
+                  <th>Nama / NISN</th>
+                  <th>Wilayah</th>
+                  <th>Cabor</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="pesertaTbody">
+                <tr><td colspan="6" class="text-center text-muted" style="padding:24px">Memuat data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="paginasiWrap" class="flex-center gap-8 mt-16"></div>
+        </div>
+
+        <!-- TAB: VERIFIKASI -->
+        <div class="admin-tab" id="tab-verifikasi">
+          <h3 class="fw-800 mb-16" style="font-size:18px">Verifikasi Berkas Peserta</h3>
+          <div class="filter-bar">
+            <select id="flt_ver_status" onchange="loadVerifikasi()">
+              <option value="Pending">Pending</option>
+              <option value="all">Semua Status</option>
+              <option value="Perlu Perbaikan">Perlu Perbaikan</option>
+            </select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No. Peserta</th>
+                  <th>Nama</th>
+                  <th>Cabor</th>
+                  <th>Dokumen</th>
+                  <th>Status</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="verifikasiTbody">
+                <tr><td colspan="6" class="text-center text-muted" style="padding:24px">Memuat data...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB: KONFIGURASI -->
+        <div class="admin-tab" id="tab-konfigurasi">
+          <h3 class="fw-800 mb-16" style="font-size:18px">Konfigurasi Sistem</h3>
+          <div class="section mb-16">
+            <div class="section-head">
+              <div class="section-head-icon" style="background:#e8f5e9;color:#2e7d32"><i class="fab fa-google-drive"></i></div>
+              <div>
+                <div class="section-head-title">Google Drive</div>
+                <div class="section-head-sub">Folder penyimpanan dokumen peserta</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="config-grid">
+                <div class="form-group">
+                  <label>Folder ID Google Drive</label>
+                  <input type="text" id="cfg_folder_id" class="form-control font-mono" placeholder="1BxiMV...">
+                  <div class="form-hint">ID dari URL Google Drive folder Anda</div>
+                </div>
+                <div class="form-group">
+                  <label>URL Folder Google Drive</label>
+                  <input type="text" id="cfg_folder_url" class="form-control" placeholder="https://drive.google.com/drive/folders/...">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="section mb-16">
+            <div class="section-head">
+              <div class="section-head-icon" style="background:var(--biru-muda);color:var(--biru)"><i class="fas fa-server"></i></div>
+              <div>
+                <div class="section-head-title">Google Apps Script (Backend)</div>
+                <div class="section-head-sub">URL endpoint GAS setelah deploy</div>
+              </div>
+            </div>
+            <div class="section-body">
+              <div class="form-group">
+                <label>GAS Web App URL</label>
+                <input type="text" id="cfg_gas_url" class="form-control font-mono" placeholder="https://script.google.com/macros/s/XXXXX/exec">
+                <div class="form-hint">Dapatkan URL ini setelah deploy GAS sebagai Web App</div>
+              </div>
+            </div>
+          </div>
+          <div class="section mb-24">
+            <div class="section-head">
+              <div class="section-head-icon" style="background:var(--emas-muda);color:var(--emas)"><i class="fas fa-cog"></i></div>
+              <div><div class="section-head-title">Pengaturan Event</div></div>
+            </div>
+            <div class="section-body">
+              <div class="config-grid">
+                <div class="form-group">
+                  <label>Tahun Pelaksanaan</label>
+                  <input type="text" id="cfg_tahun" class="form-control" value="2025">
+                </div>
+                <div class="form-group">
+                  <label>Batas Lahir Minimum</label>
+                  <input type="date" id="cfg_lahir_min" class="form-control" value="2013-01-01">
+                </div>
+                <div class="form-group">
+                  <label>Batas Lahir Maksimum</label>
+                  <input type="date" id="cfg_lahir_max" class="form-control" value="2018-12-31">
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-blue" onclick="saveConfig()">
+            <i class="fas fa-save"></i> Simpan Konfigurasi
+          </button>
+        </div>
+
+      </div><!-- /admin-main -->
+    </div><!-- /admin-layout -->
+  </div>
+
+</div><!-- /page-wrap -->
+
+<!-- ═══ MODAL VERIFIKASI ══════════════════════════════════ -->
+<div class="modal-bg" id="modalVerifikasi">
+  <div class="modal-box wide">
+    <div class="flex-between mb-24">
+      <h3 class="fw-800" style="font-size:18px">Verifikasi Peserta</h3>
+      <button onclick="closeModal('modalVerifikasi')" style="background:none;border:none;font-size:18px;color:var(--teks-2)"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="modalVerContent"></div>
+    <div class="divider"></div>
+    <div class="form-group mb-16">
+      <label>Catatan Admin (opsional)</label>
+      <textarea id="modalCatatan" class="form-control" rows="3" placeholder="Catatan jika ada berkas yang perlu diperbaiki..."></textarea>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal('modalVerifikasi')">Batal</button>
+      <button class="btn btn-red btn-sm" onclick="setStatus('Perlu Perbaikan')"><i class="fas fa-times-circle"></i> Perlu Perbaikan</button>
+      <button class="btn btn-green" onclick="setStatus('Terverifikasi')"><i class="fas fa-check-circle"></i> Terverifikasi</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PRINT AREA ════════════════════════════════════════ -->
+<div class="print-area" id="printArea"></div>
+
+<!-- ═══ SCRIPTS ═══════════════════════════════════════════ -->
+<script>
+// ─── CONFIG ───────────────────────────────────────────────
+// GAS URL — akan diperbarui dari konfigurasi admin
+let GAS_URL = localStorage.getItem('gas_url') || '';
+
+// ─── STATE ────────────────────────────────────────────────
+let adminSession = null;
+let currentModalId = null;
+let allPesertaData = [];
+let uploadedFiles  = { bpti: null, bpjs: null, surat: null, akte: null };
+let registrasiResult = null;
+
+// ─── SHOW VIEW ────────────────────────────────────────────
+function showView(viewId) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  const el = document.getElementById('view-' + viewId);
+  if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+}
+
+// ─── TOAST ────────────────────────────────────────────────
+function toast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ─── LOADING ──────────────────────────────────────────────
+function setLoading(show, msg='Memproses...') {
+  document.getElementById('loadingOverlay').classList.toggle('show', show);
+  document.getElementById('loadingText').textContent = msg;
+}
+
+// ─── CALL GAS ─────────────────────────────────────────────
+async function callGAS(action, data={}) {
+  const url = GAS_URL || localStorage.getItem('gas_url');
+  if (!url) { toast('GAS URL belum dikonfigurasi. Hubungi admin.','error'); return null; }
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action, ...data })
+    });
+    return await res.json();
+  } catch(e) {
+    toast('Koneksi gagal: ' + e.message, 'error');
+    return null;
+  }
+}
+
+// ─── STATISTIK BERANDA ────────────────────────────────────
+async function loadStatistik() {
+  const res = await callGAS('getStatistik');
+  if (!res || !res.success) return;
+  const d = res.data;
+  document.getElementById('totalAtlet').textContent = d.total;
+  ['Renang','Atletik','Bulutangkis','Pencak Silat','Senam'].forEach(c => {
+    const el = document.getElementById('cnt-' + c);
+    if (el) el.textContent = (d.per_cabor[c] || 0) + ' Atlet';
+  });
+}
+
+// ─── STEPS ────────────────────────────────────────────────
+function goToStep(n) {
+  [1,2,3,4].forEach(i => {
+    document.getElementById('formStep'+i).style.display = i===n?'block':'none';
+    const s = document.getElementById('step-'+i);
+    s.classList.remove('active','done');
+    if(i < n) s.classList.add('done');
+    else if(i === n) s.classList.add('active');
+    if(i < 4) {
+      const l = document.getElementById('line-'+i);
+      l.classList.toggle('done', i < n);
+    }
+  });
+}
+
+function nextStep(from) {
+  if(!validateStep(from)) return;
+  goToStep(from + 1);
+}
+
+function prevStep(from) { goToStep(from - 1); }
+
+// ─── VALIDASI PER STEP ────────────────────────────────────
+function setErr(id, msg) {
+  const el = document.getElementById('err_'+id);
+  const inp = document.getElementById('f_'+id);
+  if(el){ el.textContent = msg; el.classList.toggle('show', !!msg); }
+  if(inp) inp.classList.toggle('error', !!msg);
+}
+
+function validateStep(step) {
+  let ok = true;
+  if(step===1){
+    const nisn = document.getElementById('f_nisn').value.trim();
+    const tgl  = document.getElementById('f_tgl_lahir').value;
+    const nama = document.getElementById('f_nama').value.trim();
+    const gen  = document.getElementById('f_gender').value;
+    const hpo  = document.getElementById('f_hp_ortu').value.trim();
+
+    if(!/^\d{10}$/.test(nisn)){ setErr('nisn','NISN harus 10 digit angka'); ok=false; } else setErr('nisn','');
+    if(!tgl){ setErr('tgl_lahir','Tanggal lahir wajib diisi'); ok=false; }
+    else {
+      const thn = new Date(tgl).getFullYear();
+      if(thn < 2013 || thn > 2018){ setErr('tgl_lahir','Peserta harus lahir tahun 2013–2018'); ok=false; } else setErr('tgl_lahir','');
+    }
+    if(!nama){ setErr('nama','Nama wajib diisi'); ok=false; } else setErr('nama','');
+    if(!gen){ setErr('gender','Jenis kelamin wajib dipilih'); ok=false; } else setErr('gender','');
+    if(!hpo){ setErr('hp_ortu','No. HP orang tua wajib diisi'); ok=false; } else setErr('hp_ortu','');
+  }
+  if(step===2){
+    ['sekolah','npsn','wilayah','pendamping','hp_pendamping'].forEach(f => {
+      const v = document.getElementById('f_'+f).value.trim();
+      if(!v){ setErr(f,'Wajib diisi'); ok=false; } else setErr(f,'');
+    });
+  }
+  return ok;
+}
+
+// ─── KATEGORI CABOR ───────────────────────────────────────
+const KATEGORI_MAP = {
+  'Renang':       ['Gaya Bebas 50m','Gaya Dada 50m','Gaya Punggung 50m','Gaya Kupu-kupu 50m'],
+  'Atletik':      ['Kanga Escape','Formula 1'],
+  'Bulutangkis':  ['Tunggal Putra/Putri'],
+  'Pencak Silat': ['Jurus Tunggal (Wajib)','Tanding Kelas H (40–42 Kg)'],
+  'Senam':        ['Perorangan Serba Bisa']
+};
+
+function updateKategori() {
+  const cabor = document.getElementById('f_cabor').value;
+  const box   = document.getElementById('kategoriBox');
+  const list  = document.getElementById('kategoriList');
+  list.innerHTML = '';
+  if(!cabor){ box.style.display='none'; return; }
+  box.style.display='block';
+  (KATEGORI_MAP[cabor]||[]).forEach(k => {
+    const isWajib = k.includes('(Wajib)');
+    const id = 'kat_' + k.replace(/[^a-zA-Z0-9]/g,'_');
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;border:1.5px solid #bdd0f0;border-radius:8px;cursor:pointer;user-select:none;transition:all .15s';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.value = k;
+    cb.id = id;
+    cb.style.cssText = 'width:16px;height:16px;cursor:pointer;accent-color:#003F8A;flex-shrink:0';
+    if(isWajib){ cb.checked = true; cb.disabled = true; }
+    const lbl = document.createElement('label');
+    lbl.htmlFor = id;
+    lbl.textContent = k + (isWajib ? ' ✓ Wajib' : '');
+    lbl.style.cssText = 'font-size:13px;font-weight:600;cursor:pointer;color:#1A1F36';
+    wrap.appendChild(cb);
+    wrap.appendChild(lbl);
+    if(!isWajib){
+      wrap.addEventListener('click', function(e){
+        if(e.target === cb) return;
+        cb.checked = !cb.checked;
+        wrap.style.background = cb.checked ? '#E8EFF9' : '#fff';
+        wrap.style.borderColor = cb.checked ? '#003F8A' : '#bdd0f0';
+      });
+      cb.addEventListener('change', function(){
+        wrap.style.background = cb.checked ? '#E8EFF9' : '#fff';
+        wrap.style.borderColor = cb.checked ? '#003F8A' : '#bdd0f0';
+      });
+    } else {
+      wrap.style.background = '#E8EFF9';
+      wrap.style.borderColor = '#003F8A';
+    }
+    list.appendChild(wrap);
+  });
+}
+
+// ─── UPLOAD FILE ──────────────────────────────────────────
+function triggerUpload(id){ document.getElementById(id).click(); }
+
+function handleFile(e, key) {
+  const file = e.target.files[0];
+  if(!file) return;
+  if(file.type !== 'application/pdf'){ toast('Hanya file PDF yang diterima!','error'); e.target.value=''; return; }
+  if(file.size > 2*1024*1024){ toast('Ukuran file melebihi 2MB!','error'); e.target.value=''; return; }
+  uploadedFiles[key] = file;
+  document.getElementById('zone-'+ (key==='bpti'?'bpti':key)).classList.add('done');
+  document.getElementById('status-'+ (key==='bpti'?'bpti':key)).style.display='block';
+  toast(file.name + ' siap diupload','success');
+}
+
+// ─── SUBMIT FORM ──────────────────────────────────────────
+async function submitForm() {
+  // Validasi semua dokumen
+  const dokKeys = ['bpti','bpjs','surat','akte'];
+  const dokNames = {'bpti':'Bukti BPTI','bpjs':'BPJS Ketenagakerjaan','surat':'Surat Keterangan Sekolah','akte':'Akta Kelahiran'};
+  for(const k of dokKeys){
+    if(!uploadedFiles[k]){ setErr('upload','Dokumen ' + dokNames[k] + ' belum diupload'); return; }
+  }
+  const cabor = document.getElementById('f_cabor').value;
+  if(!cabor){ setErr('cabor','Pilih cabang olahraga'); return; }
+  const cats = Array.from(document.querySelectorAll('#kategoriList input:checked')).map(c=>c.value);
+  if(cats.length===0){ setErr('kategori','Pilih minimal 1 kategori'); return; }
+
+  setLoading(true,'Mengirim data pendaftaran...');
+
+  // 1. Daftar peserta
+  const payload = {
+    nisn:           document.getElementById('f_nisn').value.trim(),
+    nama_lengkap:   document.getElementById('f_nama').value.trim().toUpperCase(),
+    tanggal_lahir:  document.getElementById('f_tgl_lahir').value,
+    jenis_kelamin:  document.getElementById('f_gender').value,
+    nama_sekolah:   document.getElementById('f_sekolah').value.trim(),
+    npsn:           document.getElementById('f_npsn').value.trim(),
+    asal_wilayah:   document.getElementById('f_wilayah').value,
+    cabor:          cabor,
+    kategori:       cats.join(', '),
+    nama_pendamping:document.getElementById('f_pendamping').value.trim(),
+    hp_pendamping:  document.getElementById('f_hp_pendamping').value.trim(),
+    hp_orangtua:    document.getElementById('f_hp_ortu').value.trim()
+  };
+
+  const res = await callGAS('daftarPeserta', payload);
+  if(!res || !res.success){ setLoading(false); toast(res?.message||'Pendaftaran gagal','error'); return; }
+
+  registrasiResult = res;
+  const { id, kode_verifikasi } = res;
+
+  // 2. Upload dokumen
+  const docMap = { bpti:'bukti_bpti', bpjs:'bpjs', surat:'surat_sekolah', akte:'akte' };
+  for(const [key, tipe] of Object.entries(docMap)){
+    setLoading(true, `Mengupload ${dokNames[key]}...`);
+    const file = uploadedFiles[key];
+    const b64  = await fileToBase64(file);
+    const upRes = await callGAS('uploadDokumen', {
+      id, kode_verifikasi,
+      file_name: file.name,
+      file_type: file.type,
+      file_data: b64,
+      tipe_dokumen: tipe
+    });
+    if(!upRes||!upRes.success){ toast('Gagal upload ' + dokNames[key],'error'); }
+  }
+
+  setLoading(false);
+
+  // Step 4 sukses
+  document.getElementById('resultKode').textContent  = kode_verifikasi;
+  document.getElementById('resultNomor').textContent = 'Nomor Peserta: ' + res.nomor_peserta;
+  goToStep(4);
+  toast('Pendaftaran berhasil!','success');
+}
+
+function fileToBase64(file){
+  return new Promise((resolve,reject)=>{
+    const r = new FileReader();
+    r.onload = ()=>resolve(r.result.split(',')[1]);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+// ─── CEK STATUS ───────────────────────────────────────────
+async function cekStatus() {
+  const kode = document.getElementById('inputKodeVer').value.trim().toUpperCase();
+  if(kode.length!==8){ toast('Kode verifikasi harus 8 karakter','error'); return; }
+  setLoading(true,'Mengecek status...');
+  const res = await callGAS('getStatusPeserta',{kode_verifikasi:kode});
+  setLoading(false);
+  const wrap = document.getElementById('statusResult');
+  if(!res||!res.success){ wrap.style.display='block'; wrap.innerHTML=`<div class="section"><div class="section-body text-center"><i class="fas fa-exclamation-circle" style="font-size:28px;color:var(--merah);margin-bottom:12px"></i><p class="fw-700">Kode tidak ditemukan</p><p class="text-sm text-muted mt-4">Pastikan kode verifikasi yang Anda masukkan benar.</p></div></div>`; return; }
+  const d = res.data;
+  const badgeClass = d.status==='Terverifikasi'?'badge-ok':d.status==='Perlu Perbaikan'?'badge-perbaikan':'badge-pending';
+  const docRow = (lbl,fid) => `<div class="status-doc-row"><span>${lbl}</span>${fid?`<a href="https://drive.google.com/file/d/${fid}/view" target="_blank" class="doc-link"><i class="fas fa-eye"></i> Lihat</a>`:`<span class="doc-missing">Belum diupload</span>`}</div>`;
+  wrap.style.display='block';
+  wrap.innerHTML=`
+    <div class="status-card">
+      <div class="flex-between mb-16">
+        <div>
+          <div class="font-mono fw-700" style="font-size:16px;color:var(--biru)">${d.nomor_peserta||'–'}</div>
+          <div class="fw-700 mt-4" style="font-size:15px">${d.nama_lengkap}</div>
+          <div class="text-sm text-muted">${d.cabor} · ${d.asal_wilayah}</div>
+        </div>
+        <span class="badge ${badgeClass}"><i class="fas fa-circle" style="font-size:7px"></i> ${d.status}</span>
+      </div>
+      ${d.catatan_admin?`<div style="background:var(--emas-muda);border:1px solid #f5d87a;border-radius:var(--r-sm);padding:12px;font-size:12px;margin-bottom:16px"><i class="fas fa-comment-alt" style="color:var(--emas)"></i> <strong>Catatan Admin:</strong> ${d.catatan_admin}</div>`:''}
+      <div class="fw-700 text-xs text-muted mb-8" style="text-transform:uppercase;letter-spacing:.4px">Dokumen</div>
+      ${docRow('Bukti Pendaftaran BPTI', d.file_bukti_bpti)}
+      ${docRow('BPJS Ketenagakerjaan', d.file_bpjs)}
+      ${docRow('Surat Keterangan Sekolah', d.file_surat_sekolah)}
+      ${docRow('Akta Kelahiran', d.file_akte)}
+      <div class="mt-16 text-xs text-muted">Terdaftar: ${new Date(d.created_at).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}</div>
+    </div>`;
+}
+
+// ─── PRINT BUKTI ──────────────────────────────────────────
+function printBukti() {
+  if(!registrasiResult) return;
+  const r = registrasiResult;
+  const p = {
+    nisn:      document.getElementById('f_nisn').value,
+    nama:      document.getElementById('f_nama').value.toUpperCase(),
+    tgl:       document.getElementById('f_tgl_lahir').value,
+    gender:    document.getElementById('f_gender').value,
+    sekolah:   document.getElementById('f_sekolah').value,
+    npsn:      document.getElementById('f_npsn').value,
+    wilayah:   document.getElementById('f_wilayah').value,
+    cabor:     document.getElementById('f_cabor').value,
+    pendamping:document.getElementById('f_pendamping').value,
+  };
+  document.getElementById('printArea').innerHTML = `
+    <div style="max-width:700px;margin:0 auto;font-family:sans-serif">
+      <div style="text-align:center;border-bottom:3px solid #003F8A;padding-bottom:16px;margin-bottom:20px">
+        <h2 style="color:#003F8A;font-size:18px;margin-bottom:4px">BUKTI PENDAFTARAN PESERTA</h2>
+        <h3 style="color:#C1272D;font-size:16px">O2SN SD TINGKAT PROVINSI DKI JAKARTA 2025</h3>
+      </div>
+      <table style="width:100%;border-collapse:collapse">
+        <tr><td style="padding:8px;border:1px solid #ddd;font-weight:700;width:40%">Nomor Peserta</td><td style="padding:8px;border:1px solid #ddd;font-weight:700;color:#003F8A;font-size:16px">${r.nomor_peserta}</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd;font-weight:700;background:#f5f5f5">Kode Verifikasi</td><td style="padding:8px;border:1px solid #ddd;letter-spacing:4px;font-weight:700">${r.kode_verifikasi}</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd;background:#f5f5f5">NISN</td><td style="padding:8px;border:1px solid #ddd">${p.nisn}</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd;background:#f5f5f5">Nama Lengkap</td><td style="padding:8px;border:1px solid #ddd;font-weight:700">${p.nama}</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd;background:#f5f5f5">Tanggal Lahir</td><td style="padding:8px;border:1px solid #ddd">${p.tgl}</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd;background:#f5f5f5">Jenis Kelamin</td><td style="padding:8px;border:1px solid #ddd">${p.gender}</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd;background:#f5f5f5">Sekolah</td><td style="padding:8px;border:1px solid #ddd">${p.sekolah} (NPSN: ${p.npsn})</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd;background:#f5f5f5">Asal Wilayah</td><td style="padding:8px;border:1px solid #ddd">${p.wilayah}</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd;background:#f5f5f5">Cabang Olahraga</td><td style="padding:8px;border:1px solid #ddd;font-weight:700">${p.cabor}</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd;background:#f5f5f5">Pendamping</td><td style="padding:8px;border:1px solid #ddd">${p.pendamping}</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd;background:#f5f5f5">Tanggal Daftar</td><td style="padding:8px;border:1px solid #ddd">${new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}</td></tr>
+        <tr><td style="padding:8px;border:1px solid #ddd;background:#f5f5f5">Status</td><td style="padding:8px;border:1px solid #ddd;color:#e65100;font-weight:700">PENDING VERIFIKASI</td></tr>
+      </table>
+      <p style="font-size:11px;color:#888;margin-top:20px;text-align:center">Simpan bukti ini. Hubungi panitia jika ada pertanyaan.</p>
+    </div>`;
+  window.print();
+}
+
+// ─── ADMIN LOGIN ──────────────────────────────────────────
+// Akun demo lokal (tanpa GAS/Supabase) untuk testing tampilan
+const DEMO_ADMIN = { username: 'demo', password: 'demo123', nama: 'Demo Administrator' };
+
+async function adminLogin() {
+  const un = document.getElementById('adminUsername').value.trim();
+  const pw = document.getElementById('adminPassword').value;
+  if(!un||!pw){ toast('Isi username dan password','error'); return; }
+
+  // ── MODE DEMO (tanpa koneksi GAS) ──
+  if(un === DEMO_ADMIN.username && pw === DEMO_ADMIN.password){
+    adminSession = { username: un, password: pw, nama: DEMO_ADMIN.nama, isDemo: true };
+    document.getElementById('adminNameDisplay').textContent = DEMO_ADMIN.nama + ' [DEMO]';
+    showView('admin-dashboard');
+    loadDashboardDemo();
+    return;
+  }
+
+  // ── MODE LIVE (butuh GAS aktif) ──
+  setLoading(true,'Memverifikasi...');
+  const res = await callGAS('adminLogin',{username:un,password:pw});
+  setLoading(false);
+  if(res&&res.success){
+    adminSession = { username:un, password:pw, nama:res.admin.nama };
+    document.getElementById('adminNameDisplay').textContent = res.admin.nama;
+    showView('admin-dashboard');
+    loadDashboardStats();
+    loadConfig();
+  } else {
+    toast(res?.message||'Login gagal','error');
+  }
+}
+
+// ── DATA DUMMY UNTUK DEMO ─────────────────────────────────
+function loadDashboardDemo() {
+  document.getElementById('s_total').textContent     = '47';
+  document.getElementById('s_pending').textContent   = '18';
+  document.getElementById('s_verified').textContent  = '24';
+  document.getElementById('s_perbaikan').textContent = '5';
+
+  const wilayahData = [
+    ['Jakarta Selatan 1', 8], ['Jakarta Selatan 2', 6],
+    ['Jakarta Timur 1', 7],   ['Jakarta Timur 2', 5],
+    ['Jakarta Barat 1', 6],   ['Jakarta Barat 2', 4],
+    ['Jakarta Pusat 1', 5],   ['Jakarta Pusat 2', 3],
+    ['Jakarta Utara 1', 4],   ['Jakarta Utara 2', 3],
+    ['Kepulauan Seribu', 2]
+  ];
+  const total = 47;
+  document.getElementById('wilayahRecap').innerHTML = wilayahData.map(([w,c]) => `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+      <div style="min-width:160px;font-size:12px;font-weight:600">${w}</div>
+      <div style="flex:1;background:var(--border);border-radius:4px;height:8px;overflow:hidden">
+        <div style="height:100%;background:var(--biru);width:${Math.round(c/total*100)}%;border-radius:4px"></div>
+      </div>
+      <div style="min-width:40px;text-align:right;font-size:12px;font-weight:700;color:var(--biru)">${c}</div>
+    </div>`).join('');
+
+  const caborData = [['Renang','🏊',12],['Atletik','🏃',10],['Bulutangkis','🏸',9],['Pencak Silat','🥋',8],['Senam','🤸',8]];
+  document.getElementById('caborRecap').innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">
+    ${caborData.map(([c,ic,n])=>`
+    <div style="background:var(--abu);border:1.5px solid var(--border);border-radius:var(--r-md);padding:16px;text-align:center">
+      <div style="font-size:24px;margin-bottom:6px">${ic}</div>
+      <div style="font-size:11px;font-weight:700">${c}</div>
+      <div style="font-size:22px;font-weight:800;color:var(--biru)">${n}</div>
+    </div>`).join('')}
+  </div>`;
+
+  // Dummy tabel peserta
+  const dummyPeserta = [
+    {id:1, nomor_peserta:'DKI-2025-REN-001', nama_lengkap:'AHMAD FAUZI', nisn:'1234567890', asal_wilayah:'Jakarta Selatan 1', cabor:'Renang', status:'Terverifikasi'},
+    {id:2, nomor_peserta:'DKI-2025-ATL-002', nama_lengkap:'SARI DEWI PUTRI', nisn:'0987654321', asal_wilayah:'Jakarta Timur 2', cabor:'Atletik', status:'Pending'},
+    {id:3, nomor_peserta:'DKI-2025-BDM-003', nama_lengkap:'BUDI SANTOSO', nisn:'1122334455', asal_wilayah:'Jakarta Barat 1', cabor:'Bulutangkis', status:'Perlu Perbaikan'},
+    {id:4, nomor_peserta:'DKI-2025-SLT-004', nama_lengkap:'RINI WULANDARI', nisn:'5544332211', asal_wilayah:'Jakarta Pusat 1', cabor:'Pencak Silat', status:'Terverifikasi'},
+    {id:5, nomor_peserta:'DKI-2025-SNM-005', nama_lengkap:'DONI PRASETYO', nisn:'6677889900', asal_wilayah:'Jakarta Utara 1', cabor:'Senam', status:'Pending'},
+  ];
+  allPesertaData = dummyPeserta;
+  renderPesertaTable(dummyPeserta);
+
+  // Dummy verifikasi
+  const tbody = document.getElementById('verifikasiTbody');
+  tbody.innerHTML = dummyPeserta.filter(p=>p.status!=='Terverifikasi').map(p=>{
+    const badgeCls = p.status==='Perlu Perbaikan'?'badge-perbaikan':'badge-pending';
+    return `<tr>
+      <td class="mono">${p.nomor_peserta}</td>
+      <td><div class="fw-700 text-xs">${p.nama_lengkap}</div><div class="text-xs text-muted">${p.asal_wilayah}</div></td>
+      <td class="text-xs fw-700">${p.cabor}</td>
+      <td style="display:flex;gap:8px;align-items:center;padding:10px 12px">
+        <span style="color:var(--border)" title="BPTI"><i class="fas fa-times"></i></span>
+        <span style="color:var(--border)" title="BPJS"><i class="fas fa-times"></i></span>
+        <span style="color:var(--border)" title="Surat"><i class="fas fa-times"></i></span>
+        <span style="color:var(--border)" title="Akte"><i class="fas fa-times"></i></span>
+      </td>
+      <td><span class="badge ${badgeCls}">${p.status}</span></td>
+      <td><button class="btn btn-blue btn-sm" onclick="toast('Mode demo: verifikasi tidak aktif','error')"><i class="fas fa-check-circle"></i> Verifikasi</button></td>
+    </tr>`;}).join('');
+
+  toast('Mode Demo aktif — data tidak tersimpan', '');
+}
+
+function adminLogout() {
+  adminSession = null;
+  showView('beranda');
+  toast('Berhasil keluar');
+}
+
+// ─── ADMIN TABS ───────────────────────────────────────────
+function adminTab(name, el) {
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.sidebar-menu a').forEach(a=>a.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  el.classList.add('active');
+  if(name==='peserta') loadPeserta();
+  if(name==='verifikasi') loadVerifikasi();
+  if(name==='dashboard') loadDashboardStats();
+  return false;
+}
+
+// ─── DASHBOARD STATS ─────────────────────────────────────
+async function loadDashboardStats() {
+  const res = await callGAS('getStatistik');
+  if(!res||!res.success) return;
+  const d = res.data;
+  document.getElementById('s_total').textContent    = d.total;
+  document.getElementById('s_pending').textContent  = d.per_status['Pending']||0;
+  document.getElementById('s_verified').textContent = d.per_status['Terverifikasi']||0;
+  document.getElementById('s_perbaikan').textContent= d.per_status['Perlu Perbaikan']||0;
+
+  // Wilayah recap
+  const wEl = document.getElementById('wilayahRecap');
+  const wEntries = Object.entries(d.per_wilayah).sort((a,b)=>b[1]-a[1]);
+  wEl.innerHTML = wEntries.length ? wEntries.map(([w,c])=>`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+      <div style="min-width:160px;font-size:12px;font-weight:600">${w}</div>
+      <div style="flex:1;background:var(--border);border-radius:4px;height:8px;overflow:hidden">
+        <div style="height:100%;background:var(--biru);width:${Math.min(100,c/d.total*100)}%;border-radius:4px"></div>
+      </div>
+      <div style="min-width:40px;text-align:right;font-size:12px;font-weight:700;color:var(--biru)">${c}</div>
+    </div>`).join('') : '<p class="text-sm text-muted">Belum ada data</p>';
+
+  // Cabor recap
+  const cEl = document.getElementById('caborRecap');
+  const icons = {Renang:'🏊',Atletik:'🏃',Bulutangkis:'🏸','Pencak Silat':'🥋',Senam:'🤸'};
+  const cEntries = Object.entries(d.per_cabor);
+  cEl.innerHTML = cEntries.length ? `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px">${cEntries.map(([c,n])=>`
+    <div style="background:var(--abu);border:1.5px solid var(--border);border-radius:var(--r-md);padding:16px;text-align:center">
+      <div style="font-size:24px;margin-bottom:6px">${icons[c]||'🏅'}</div>
+      <div style="font-size:11px;font-weight:700">${c}</div>
+      <div style="font-size:22px;font-weight:800;color:var(--biru)">${n}</div>
+    </div>`).join('')}</div>` : '<p class="text-sm text-muted">Belum ada data</p>';
+}
+
+// ─── LOAD PESERTA (ADMIN) ─────────────────────────────────
+async function loadPeserta() {
+  const tbody = document.getElementById('pesertaTbody');
+  tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted" style="padding:24px"><div class="spinner" style="margin:0 auto;border-color:rgba(0,0,0,.1);border-top-color:var(--biru)"></div></td></tr>`;
+  const res = await callGAS('getAllPeserta',{
+    username:    adminSession.username,
+    password:    adminSession.password,
+    filter_wilayah: document.getElementById('flt_wilayah').value,
+    filter_cabor:   document.getElementById('flt_cabor').value,
+    filter_status:  document.getElementById('flt_status').value,
+    page: 1, per_page: 100
+  });
+  if(!res||!res.success){ tbody.innerHTML=`<tr><td colspan="6" class="text-center text-muted" style="padding:24px">Gagal memuat data</td></tr>`; return; }
+  allPesertaData = res.data;
+  renderPesertaTable(allPesertaData);
+}
+
+function renderPesertaTable(data) {
+  const tbody = document.getElementById('pesertaTbody');
+  if(!data||data.length===0){ tbody.innerHTML=`<tr><td colspan="6" class="text-center text-muted" style="padding:24px">Tidak ada data ditemukan</td></tr>`; return; }
+  const badgeCls = s => s==='Terverifikasi'?'badge-ok':s==='Perlu Perbaikan'?'badge-perbaikan':'badge-pending';
+  tbody.innerHTML = data.map(p => `
+    <tr>
+      <td class="mono">${p.nomor_peserta||'–'}</td>
+      <td><div class="fw-700" style="font-size:12px">${p.nama_lengkap}</div><div class="text-xs text-muted">NISN: ${p.nisn}</div></td>
+      <td class="text-xs">${p.asal_wilayah}</td>
+      <td class="text-xs fw-700">${p.cabor}</td>
+      <td><span class="badge ${badgeCls(p.status)}">${p.status}</span></td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="openVerModal(${p.id})"><i class="fas fa-eye"></i></button>
+      </td>
+    </tr>`).join('');
+}
+
+function filterTableClient() {
+  const q = document.getElementById('flt_search').value.toLowerCase();
+  const filtered = allPesertaData.filter(p =>
+    p.nama_lengkap.toLowerCase().includes(q) || p.nisn.includes(q));
+  renderPesertaTable(filtered);
+}
+
+// ─── VERIFIKASI ───────────────────────────────────────────
+async function loadVerifikasi() {
+  const status = document.getElementById('flt_ver_status').value;
+  const tbody = document.getElementById('verifikasiTbody');
+  tbody.innerHTML = `<tr><td colspan="6" class="text-center" style="padding:24px">Memuat...</td></tr>`;
+  const res = await callGAS('getAllPeserta',{
+    username: adminSession.username, password: adminSession.password,
+    filter_status: status, page:1, per_page:100
+  });
+  if(!res||!res.success){ tbody.innerHTML=`<tr><td colspan="6" class="text-center text-muted" style="padding:24px">Gagal memuat</td></tr>`; return; }
+  const data = res.data;
+  if(!data||data.length===0){ tbody.innerHTML=`<tr><td colspan="6" class="text-center text-muted" style="padding:24px">Tidak ada data</td></tr>`; return; }
+  const docIcon = fid => fid
+    ? `<a href="https://drive.google.com/file/d/${fid}/view" target="_blank" class="doc-link"><i class="fas fa-file-pdf"></i></a>`
+    : `<span style="color:var(--border)"><i class="fas fa-times"></i></span>`;
+  const badgeCls = s => s==='Terverifikasi'?'badge-ok':s==='Perlu Perbaikan'?'badge-perbaikan':'badge-pending';
+  tbody.innerHTML = data.map(p=>`
+    <tr>
+      <td class="mono">${p.nomor_peserta||'–'}</td>
+      <td><div class="fw-700 text-xs">${p.nama_lengkap}</div><div class="text-xs text-muted">${p.asal_wilayah}</div></td>
+      <td class="text-xs fw-700">${p.cabor}</td>
+      <td style="display:flex;gap:8px;align-items:center;padding:10px 12px">
+        <span title="BPTI">${docIcon(p.file_bukti_bpti)}</span>
+        <span title="BPJS">${docIcon(p.file_bpjs)}</span>
+        <span title="Surat">${docIcon(p.file_surat_sekolah)}</span>
+        <span title="Akte">${docIcon(p.file_akte)}</span>
+      </td>
+      <td><span class="badge ${badgeCls(p.status)}">${p.status}</span></td>
+      <td><button class="btn btn-blue btn-sm" onclick="openVerModal(${p.id})"><i class="fas fa-check-circle"></i> Verifikasi</button></td>
+    </tr>`).join('');
+}
+
+let currentVerId = null;
+function openVerModal(id) {
+  currentVerId = id;
+  const p = allPesertaData.find(x=>x.id===id) || {};
+  const docRow = (lbl,fid) => `
+    <div class="status-doc-row">
+      <span class="text-sm">${lbl}</span>
+      ${fid
+        ? `<a href="https://drive.google.com/file/d/${fid}/view" target="_blank" class="doc-link"><i class="fas fa-external-link-alt"></i> Buka File</a>`
+        : '<span class="text-xs" style="color:var(--merah)"><i class="fas fa-times"></i> Belum diupload</span>'}
+    </div>`;
+  document.getElementById('modalVerContent').innerHTML = `
+    <div class="mb-16">
+      <div class="font-mono fw-700" style="color:var(--biru)">${p.nomor_peserta||'–'}</div>
+      <div class="fw-700 mt-4" style="font-size:15px">${p.nama_lengkap||'–'}</div>
+      <div class="text-sm text-muted">${p.cabor||'–'} · ${p.asal_wilayah||'–'} · ${p.jenis_kelamin||'–'}</div>
+      <div class="text-xs text-muted mt-4">NISN: ${p.nisn||'–'} · Sekolah: ${p.nama_sekolah||'–'}</div>
+    </div>
+    <div class="fw-700 text-xs mb-8" style="text-transform:uppercase;letter-spacing:.4px;color:var(--teks-2)">Dokumen Peserta</div>
+    ${docRow('Bukti Pendaftaran BPTI', p.file_bukti_bpti)}
+    ${docRow('BPJS Ketenagakerjaan', p.file_bpjs)}
+    ${docRow('Surat Keterangan Sekolah', p.file_surat_sekolah)}
+    ${docRow('Akta Kelahiran', p.file_akte)}`;
+  document.getElementById('modalCatatan').value = p.catatan_admin||'';
+  openModal('modalVerifikasi');
+}
+
+async function setStatus(status) {
+  if(!currentVerId) return;
+  setLoading(true,'Memperbarui status...');
+  const res = await callGAS('updateStatus',{
+    username: adminSession.username,
+    password: adminSession.password,
+    id: currentVerId,
+    status: status,
+    catatan_admin: document.getElementById('modalCatatan').value
+  });
+  setLoading(false);
+  if(res&&res.success){
+    toast('Status diperbarui: '+status,'success');
+    closeModal('modalVerifikasi');
+    loadVerifikasi();
+    loadDashboardStats();
+  } else toast(res?.message||'Gagal','error');
+}
+
+// ─── CONFIG ───────────────────────────────────────────────
+async function loadConfig() {
+  const res = await callGAS('getConfig');
+  if(!res||!res.success) return;
+  const d = res.data;
+  document.getElementById('cfg_folder_id').value  = d.gdrive_folder_id||'';
+  document.getElementById('cfg_folder_url').value = d.gdrive_folder_url||'';
+  document.getElementById('cfg_gas_url').value    = d.gas_url||'';
+  document.getElementById('cfg_tahun').value      = d.tahun||'2025';
+  document.getElementById('cfg_lahir_min').value  = d.batas_lahir_min||'2013-01-01';
+  document.getElementById('cfg_lahir_max').value  = d.batas_lahir_max||'2018-12-31';
+}
+
+async function saveConfig() {
+  const configs = {
+    gdrive_folder_id:  document.getElementById('cfg_folder_id').value.trim(),
+    gdrive_folder_url: document.getElementById('cfg_folder_url').value.trim(),
+    gas_url:           document.getElementById('cfg_gas_url').value.trim(),
+    tahun:             document.getElementById('cfg_tahun').value.trim(),
+    batas_lahir_min:   document.getElementById('cfg_lahir_min').value,
+    batas_lahir_max:   document.getElementById('cfg_lahir_max').value
+  };
+  // Simpan GAS URL lokal juga
+  if(configs.gas_url){ GAS_URL = configs.gas_url; localStorage.setItem('gas_url', configs.gas_url); }
+  setLoading(true,'Menyimpan konfigurasi...');
+  const res = await callGAS('updateConfig',{ username:adminSession.username, password:adminSession.password, configs });
+  setLoading(false);
+  toast(res?.success?'Konfigurasi disimpan!':'Gagal menyimpan konfigurasi', res?.success?'success':'error');
+}
+
+// ─── EXPORT EXCEL ─────────────────────────────────────────
+async function doExport() {
+  setLoading(true,'Mengekspor data...');
+  const res = await callGAS('exportExcel',{ username:adminSession.username, password:adminSession.password });
+  setLoading(false);
+  if(res&&res.success){
+    window.open(res.download_url,'_blank');
+    toast('File Excel siap diunduh','success');
+  } else toast(res?.message||'Export gagal','error');
+}
+
+// ─── MODAL ────────────────────────────────────────────────
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ─── INIT ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Cek GAS URL tersimpan
+  const savedUrl = localStorage.getItem('gas_url');
+  if(savedUrl) GAS_URL = savedUrl;
+  loadStatistik();
+  goToStep(1);
+});
+</script>
+</body>
+</html>

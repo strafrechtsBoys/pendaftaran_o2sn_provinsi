@@ -340,9 +340,9 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
 <div class="view active" id="view-beranda">
 
   <div class="hero">
-    <span class="hero-tag"><i class="fas fa-bolt"></i> Pendaftaran Dibuka</span>
+    <span class="hero-tag"><i class="fas fa-bolt"></i> Pendataan Dibuka</span>
     <h2>Jadilah Juara di <em>O2SN SD</em><br>Provinsi DKI Jakarta</h2>
-    <p>Portal resmi pendaftaran atlet dan pengumuman hasil pertandingan Olimpiade Olahraga Siswa Nasional jenjang Sekolah Dasar.</p>
+    <p>Portal resmi pendataan atlet dan pengumuman hasil pertandingan Olimpiade Olahraga Siswa Nasional jenjang Sekolah Dasar Tingkta Provinsi DKI Jakarta.</p>
     <div class="hero-cta">
       <button class="btn btn-coral" onclick="showView('form-daftar')"><i class="fas fa-user-plus"></i> Daftar Sekarang</button>
       <button class="btn btn-ghostw" onclick="showView('cek-status')"><i class="fas fa-magnifying-glass"></i> Cek Status</button>
@@ -403,7 +403,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
   <div class="card">
     <div class="card-h">
       <div class="card-h-ico" style="background:var(--gold-soft);color:var(--gold)"><i class="fas fa-circle-info"></i></div>
-      <div><div class="card-h-t">Informasi Pendaftaran</div><div class="card-h-s">Baca sebelum mendaftar</div></div>
+      <div><div class="card-h-t">Informasi Pendataan</div><div class="card-h-s">Baca sebelum mendaftar</div></div>
     </div>
     <div class="card-b">
       <div class="fgrid">
@@ -450,8 +450,8 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
 <div class="view" id="view-form-daftar">
   <div class="fxb mb20">
     <div>
-      <div class="xs mut mb6">Pendaftaran Online</div>
-      <h2 class="b8" style="font-size:22px;letter-spacing:-.4px">Form Pendaftaran Atlet</h2>
+      <div class="xs mut mb6">Pendataan Online</div>
+      <h2 class="b8" style="font-size:22px;letter-spacing:-.4px">Form Pendataan Atlet</h2>
     </div>
     <button class="btn btn-line btn-sm" onclick="showView('beranda')"><i class="fas fa-arrow-left"></i> Kembali</button>
   </div>
@@ -633,7 +633,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
 
     <div class="fxb">
       <button class="btn btn-line" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i> Kembali</button>
-      <button class="btn btn-coral" id="btnSubmit" onclick="submitForm()"><i class="fas fa-paper-plane"></i> Kirim Pendaftaran</button>
+      <button class="btn btn-coral" id="btnSubmit" onclick="submitForm()"><i class="fas fa-paper-plane"></i> Kirim Data</button>
     </div>
   </div>
 
@@ -641,12 +641,13 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
   <div id="fs4" style="display:none">
     <div class="success">
       <div class="big">🎉</div>
-      <h2 class="b8" style="font-size:22px;margin-bottom:8px">Pendaftaran Berhasil!</h2>
-      <p style="color:rgba(255,255,255,.85);font-size:13.5px;margin-bottom:14px">Simpan kode verifikasi ini untuk mengecek status pendaftaran Anda.</p>
+      <h2 class="b8" style="font-size:22px;margin-bottom:8px">Pengiriman Data Berhasil!</h2>
+      <p style="color:rgba(255,255,255,.85);font-size:13.5px;margin-bottom:14px">Simpan kode verifikasi ini untuk mengecek status pendataan Anda.</p>
       <div class="success-kode" id="rKode">--------</div>
       <div class="success-no" id="rNomor">Nomor Peserta: –</div>
       <div class="fx g12" style="justify-content:center;flex-wrap:wrap">
         <button class="btn btn-ghostw" onclick="printBukti()"><i class="fas fa-print"></i> Cetak Bukti</button>
+        <button class="btn" style="background:#fff;color:var(--teal-deep)" onclick="resetFormDaftarLagi()"><i class="fas fa-user-plus"></i> Daftar Peserta Lainnya</button>
         <button class="btn btn-ghostw" onclick="showView('beranda')"><i class="fas fa-house"></i> Beranda</button>
       </div>
     </div>
@@ -658,7 +659,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
   <div class="fxb mb20">
     <div>
       <div class="xs mut mb6">Peserta</div>
-      <h2 class="b8" style="font-size:22px">Cek Status Pendaftaran</h2>
+      <h2 class="b8" style="font-size:22px">Cek Status Pendataan</h2>
     </div>
     <button class="btn btn-line btn-sm" onclick="showView('beranda')"><i class="fas fa-arrow-left"></i> Kembali</button>
   </div>
@@ -950,6 +951,9 @@ const WILAYAH_LIST = ['Jakarta Utara 1','Jakarta Utara 2','Jakarta Barat 1','Jak
 
 // ═══════════ UTIL ═══════════
 function showView(v){
+  // ✨ Reset cek status saat berpindah dari view cek-status
+  const curr=document.querySelector('.view.active');
+  if(curr && curr.id==='view-cek-status' && v!=='cek-status') resetCekStatus();
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
   const el=document.getElementById('view-'+v);
   if(el){el.classList.add('active');window.scrollTo({top:0});}
@@ -983,16 +987,21 @@ async function callGAS(action,data={}){
 
 // ═══════════ BERANDA: load publik ═══════════
 async function loadPublik(){
-  const res=await callGAS('getHasilPublik');
-  if(res&&res.success){
-    pubData=res;
-    renderMedali();
-    renderCaborCards();
-    renderPortal();
+  // Ambil hasil publik dan statistik cabor bersamaan
+  const [resHasil, resStat] = await Promise.all([
+    callGAS('getHasilPublik'),
+    callGAS('getStatistik')
+  ]);
+  if(resHasil && resHasil.success){
+    pubData=resHasil;
   } else {
-    renderCaborCards(); // tetap render kartu default
-    renderPortal();
+    pubData={settings:[],hasil:[],medali:{}};
   }
+  // Sisipkan jumlah peserta per cabor
+  pubData.per_cabor = (resStat && resStat.success) ? (resStat.data.per_cabor||{}) : {};
+  renderMedali();
+  renderCaborCards();
+  renderPortal();
 }
 
 function renderMedali(){
@@ -1021,11 +1030,14 @@ function renderMedali(){
 function renderCaborCards(){
   const onMap={};
   (pubData.settings||[]).forEach(s=>onMap[s.cabor]=s.hasil_on);
+  const cntMap=pubData.per_cabor||{};
   document.getElementById('caborGrid').innerHTML=CABOR_LIST.map(c=>{
     const on=onMap[c]===true;
+    const cnt=cntMap[c]||0;
     return `<div class="cb-card" onclick="openHasil('${c}')">
       <div class="cb-ico">${CABOR_ICON[c]}</div>
       <div class="cb-name">${c}</div>
+      <div class="cb-cnt"><i class="fas fa-users" style="font-size:10px"></i> ${cnt} Atlet Terdaftar</div>
       <div class="cb-stat ${on?'cb-on':'cb-off'}">
         <i class="fas fa-${on?'circle-check':'clock'}"></i> ${on?'Hasil Tersedia':'Menunggu'}
       </div>
@@ -1216,7 +1228,7 @@ async function submitForm(){
   if(cats.length===0){sErr('kat','Pilih minimal 1 kategori');return}else sErr('kat','');
 
   document.getElementById('btnSubmit').disabled=true;
-  lov(true,'Mengirim data pendaftaran...');
+  lov(true,'Mengirim data ...');
 
   const res=await callGAS('daftarPeserta',{
     nisn:v('f_nisn'),nama_lengkap:v('f_nama').toUpperCase(),tanggal_lahir:v('f_tgl'),
@@ -1227,7 +1239,7 @@ async function submitForm(){
 
   if(!res||!res.success){
     lov(false);document.getElementById('btnSubmit').disabled=false;
-    toast(res?.message||'Pendaftaran gagal','error');return;
+    toast(res?.message||'Pengiriman Data gagal','error');return;
   }
   regResult=res;
 
@@ -1241,7 +1253,9 @@ async function submitForm(){
     const up=await callGAS('uploadDokumen',{
       id:res.id,kode_verifikasi:res.kode_verifikasi,
       file_name:files[key].name,file_type:files[key].type,
-      file_data:b64,tipe_dokumen:tipe
+      file_data:b64,tipe_dokumen:tipe,
+      nama_siswa:  v('f_nama').toUpperCase(),
+      asal_wilayah:v('f_wil')
     });
     if(up&&up.success){setZoneDone(key,true,'Terupload ke Drive')}
     else{setZoneDone(key,false,up?.message||'Gagal upload');allOk=false}
@@ -1251,7 +1265,7 @@ async function submitForm(){
   document.getElementById('rKode').textContent=res.kode_verifikasi;
   document.getElementById('rNomor').textContent='Nomor Peserta: '+res.nomor_peserta;
   goStep(4);
-  toast(allOk?'Pendaftaran lengkap berhasil!':'Terdaftar, tapi ada dokumen gagal upload — cek status nanti',allOk?'success':'error');
+  toast(allOk?'Peendataan lengkap berhasil!':'Terdata, tapi ada dokumen gagal upload — cek status nanti',allOk?'success':'error');
 }
 
 function toB64(file){
@@ -1301,29 +1315,63 @@ function printBukti(){
   if(!regResult)return;
   const p={nisn:v('f_nisn'),nama:v('f_nama').toUpperCase(),tgl:v('f_tgl'),jk:v('f_jk'),
     sek:v('f_sek'),npsn:v('f_npsn'),wil:v('f_wil'),cab:v('f_cabor'),pend:v('f_pend')};
-  const td='padding:8px;border:1px solid #ccc;';
-  const tdh=td+'background:#f4f4f4;font-weight:700;width:38%;';
+  const td='padding:7px 9px;border:1px solid #ccc;font-size:12.5px';
+  const tdh=td+';background:#f4f4f4;font-weight:700;width:35%;';
+  const now=new Date();
+  const tglIso=now.toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+  const wktUpload=now.toLocaleString('id-ID',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+
   document.getElementById('printArea').innerHTML=`
-  <div style="max-width:680px;margin:0 auto;font-family:sans-serif">
-    <div style="text-align:center;border-bottom:3px solid #0D9488;padding-bottom:14px;margin-bottom:18px">
-      <h2 style="color:#0F766E;font-size:17px">BUKTI PENDAFTARAN PESERTA</h2>
-      <h3 style="color:#F97316;font-size:15px;margin-top:3px">O2SN SD TINGKAT PROVINSI DKI JAKARTA 2025</h3>
+  <div style="max-width:720px;margin:0 auto;font-family:'Times New Roman',serif">
+
+    <!-- KOP SURAT -->
+    <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:4px double #000;padding-bottom:14px;margin-bottom:18px">
+      <img src="assets/logo-pemprov-dki.png" alt="Pemprov DKI" style="width:78px;height:78px;object-fit:contain">
+      <div style="flex:1;text-align:center;padding:0 14px">
+        <div style="font-size:13px;font-weight:700;letter-spacing:1px">PEMERINTAH PROVINSI DKI JAKARTA</div>
+        <div style="font-size:12px;letter-spacing:.5px">DINAS PENDIDIKAN</div>
+        <div style="font-size:16px;font-weight:800;margin-top:4px;letter-spacing:.5px">PANITIA O2SN SD TINGKAT PROVINSI 2025</div>
+        <div style="font-size:11px;color:#444;margin-top:3px">Sekretariat: KKG PJOK Provinsi DKI Jakarta · Tahun 2025</div>
+      </div>
+      <img src="assets/logo-o2sn.png" alt="O2SN" style="width:78px;height:78px;object-fit:contain;border-radius:50%">
     </div>
-    <table style="width:100%;border-collapse:collapse;font-size:13px">
-      <tr><td style="${tdh}">Nomor Peserta</td><td style="${td}font-weight:800;color:#0F766E;font-size:15px">${regResult.nomor_peserta}</td></tr>
-      <tr><td style="${tdh}">Kode Verifikasi</td><td style="${td}letter-spacing:4px;font-weight:800">${regResult.kode_verifikasi}</td></tr>
+
+    <!-- JUDUL -->
+    <div style="text-align:center;margin:18px 0">
+      <div style="font-size:15px;font-weight:800;text-decoration:underline;letter-spacing:.5px">BUKTI PENDATAAN PESERTA</div>
+      <div style="font-size:12px;margin-top:3px">Nomor: ${regResult.nomor_peserta}</div>
+    </div>
+
+    <p style="font-size:12.5px;margin:10px 0;line-height:1.5">Dengan ini Panitia O2SN SD Tingkat Provinsi DKI Jakarta menyatakan bahwa peserta berikut telah terdaftar dalam sistem dan dokumen administratifnya telah diterima untuk diverifikasi:</p>
+
+    <table style="width:100%;border-collapse:collapse;margin-top:8px">
+      <tr><td style="${tdh}">Kode Verifikasi</td><td style="${td};letter-spacing:3px;font-weight:800;font-family:monospace">${regResult.kode_verifikasi}</td></tr>
       <tr><td style="${tdh}">NISN</td><td style="${td}">${p.nisn}</td></tr>
-      <tr><td style="${tdh}">Nama</td><td style="${td}font-weight:700">${p.nama}</td></tr>
-      <tr><td style="${tdh}">Tgl Lahir</td><td style="${td}">${p.tgl}</td></tr>
+      <tr><td style="${tdh}">Nama Lengkap</td><td style="${td};font-weight:700">${p.nama}</td></tr>
+      <tr><td style="${tdh}">Tempat, Tanggal Lahir</td><td style="${td}">${p.tgl}</td></tr>
       <tr><td style="${tdh}">Jenis Kelamin</td><td style="${td}">${p.jk}</td></tr>
-      <tr><td style="${tdh}">Sekolah</td><td style="${td}">${p.sek} (NPSN ${p.npsn})</td></tr>
-      <tr><td style="${tdh}">Wilayah</td><td style="${td}">${p.wil}</td></tr>
-      <tr><td style="${tdh}">Cabor</td><td style="${td}font-weight:700">${p.cab}</td></tr>
-      <tr><td style="${tdh}">Pendamping</td><td style="${td}">${p.pend}</td></tr>
-      <tr><td style="${tdh}">Tgl Daftar</td><td style="${td}">${new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}</td></tr>
-      <tr><td style="${tdh}">Status</td><td style="${td}color:#B45309;font-weight:800">PENDING VERIFIKASI</td></tr>
+      <tr><td style="${tdh}">Asal Sekolah</td><td style="${td}">${p.sek} (NPSN ${p.npsn})</td></tr>
+      <tr><td style="${tdh}">Asal Wilayah</td><td style="${td};font-weight:700">${p.wil}</td></tr>
+      <tr><td style="${tdh}">Cabang Olahraga</td><td style="${td};font-weight:700">${p.cab}</td></tr>
+      <tr><td style="${tdh}">Guru Pendamping</td><td style="${td}">${p.pend}</td></tr>
+      <tr><td style="${tdh}">Status Pendataan</td><td style="${td};color:#B45309;font-weight:800">PENDING VERIFIKASI</td></tr>
+      <tr><td style="${tdh}">Waktu Pendataan Berkas</td><td style="${td}">${wktUpload} WIB</td></tr>
     </table>
-    <p style="font-size:11px;color:#888;margin-top:18px;text-align:center">Simpan bukti ini sebagai tanda pendaftaran resmi.</p>
+
+    <p style="font-size:12px;color:#555;margin-top:12px;line-height:1.5;font-style:italic">Bukti ini sah sebagai tanda telah mendaftar. Status akhir keikutsertaan menunggu hasil verifikasi panitia. Mohon kode verifikasi disimpan untuk pengecekan status.</p>
+
+    <!-- TITIMANGSA & TTD -->
+    <div style="margin-top:50px;display:flex;justify-content:flex-end">
+      <div style="text-align:center;font-size:12.5px">
+        <div>Jakarta, ${tglIso}</div>
+        <div style="font-weight:700;margin-top:3px">Panitia O2SN SD Provinsi DKI Jakarta</div>
+        <div style="height:80px;display:flex;align-items:center;justify-content:center;color:#aaa;font-style:italic">(tanda tangan & cap)</div>
+        <div style="font-weight:800;text-decoration:underline">_____________________________</div>
+        <div style="margin-top:2px">Ketua Panitia</div>
+      </div>
+    </div>
+
+    <p style="font-size:10px;color:#999;text-align:center;margin-top:30px;border-top:1px solid #ddd;padding-top:8px">Dokumen ini dicetak otomatis dari sistem pendataan online · KKG PJOK Provinsi DKI Jakarta</p>
   </div>`;
   window.print();
 }
@@ -1654,6 +1702,51 @@ function loadDemo(){
     hasil:[{id:1,cabor:'Renang',kategori:'Gaya Bebas 50m',juara1_nama:'AHMAD FAUZI',juara1_sekolah:'SDN Contoh 01',juara1_wilayah:'Jakarta Selatan 1',juara2_nama:'RIZKY P',juara2_sekolah:'SDN Contoh 04',juara2_wilayah:'Jakarta Timur 1',juara3_nama:'DONI K',juara3_sekolah:'SDN Contoh 05',juara3_wilayah:'Jakarta Barat 2'}]};
   renderCaborSettings();renderHasilTable();renderJuaraForms();
   toast('Mode Demo — data tidak tersimpan');
+}
+
+// ═══════════ RESET FORM untuk daftar peserta berikutnya ═══════════
+function resetFormDaftarLagi(){
+  // Reset semua input
+  ['f_nisn','f_tgl','f_nama','f_jk','f_hportu',
+   'f_sek','f_npsn','f_wil','f_pend','f_hppend','f_cabor'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.value='';
+  });
+  // Reset files state
+  files={bpti:null,bpjs:null,surat:null,akte:null};
+  ['bpti','bpjs','surat','akte'].forEach(k=>{
+    const zone=document.getElementById('z_'+k);
+    const inp=document.getElementById('file_'+k);
+    const zf=document.getElementById('zf_'+k);
+    const zs=document.getElementById('zs_'+k);
+    const zi=document.getElementById('zi_'+k);
+    if(zone)zone.classList.remove('sel','ok','fail');
+    if(inp)inp.value='';
+    if(zf){zf.textContent='';}
+    if(zs){zs.textContent='';}
+    const icoMap={bpti:'file-invoice',bpjs:'id-card',surat:'file-lines',akte:'baby'};
+    if(zi)zi.innerHTML='<i class="fas fa-'+icoMap[k]+'"></i>';
+  });
+  // Reset kategori
+  document.getElementById('katBox').style.display='none';
+  document.getElementById('katList').innerHTML='';
+  // Reset error indicators
+  document.querySelectorAll('.ferr').forEach(e=>e.classList.remove('show'));
+  document.querySelectorAll('.fc.error').forEach(e=>e.classList.remove('error'));
+  // Reset registrasi
+  regResult=null;
+  document.getElementById('btnSubmit').disabled=false;
+  // Kembali ke step 1
+  goStep(1);
+  toast('Form direset. Silakan daftarkan peserta berikutnya','success');
+}
+
+// ═══════════ RESET CEK STATUS saat kembali ke beranda ═══════════
+function resetCekStatus(){
+  const inp=document.getElementById('inKode');
+  if(inp)inp.value='';
+  const w=document.getElementById('statusResult');
+  if(w)w.innerHTML='';
 }
 
 // ═══════════ INIT ═══════════

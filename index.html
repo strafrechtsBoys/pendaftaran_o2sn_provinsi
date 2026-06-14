@@ -429,6 +429,20 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
     </div>
   </div>
 
+  <!-- ✨ CP Panitia -->
+  <div class="card">
+    <div class="card-h">
+      <div class="card-h-ico" style="background:#FEE7E5;color:var(--coral)"><i class="fas fa-phone"></i></div>
+      <div>
+        <div class="card-h-t">Contact Person Panitia</div>
+        <div class="card-h-s">Hubungi panitia jika ada pertanyaan</div>
+      </div>
+    </div>
+    <div class="card-b" id="cpPanitiaBox">
+      <p class="sm mut">Memuat...</p>
+    </div>
+  </div>
+
   <div class="tc" style="margin-top:44px;padding-top:20px;border-top:1px solid var(--line)">
     <p class="xs mut">© 2026 <strong>KKG PJOK Provinsi DKI Jakarta</strong> &times; <strong>Gurumasakini</strong>. Hak cipta dilindungi.</p>
   </div>
@@ -895,6 +909,24 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
             </div>
           </div>
         </div>
+
+        <!-- ✨ CP Panitia -->
+        <div class="card">
+          <div class="card-h">
+            <div class="card-h-ico" style="background:#FEE7E5;color:var(--coral)"><i class="fas fa-phone"></i></div>
+            <div>
+              <div class="card-h-t">Contact Person Panitia</div>
+              <div class="card-h-s">Akan ditampilkan di beranda untuk dihubungi peserta</div>
+            </div>
+          </div>
+          <div class="card-b">
+            <div class="fgrid">
+              <div class="fg span2"><label>Nama Panitia</label><input type="text" id="c_cp_nama" class="fc" placeholder="Nama lengkap"></div>
+              <div class="fg"><label>No. HP / WhatsApp</label><input type="tel" id="c_cp_nohp" class="fc" placeholder="08xxxxxxxxxx" inputmode="tel"></div>
+              <div class="fg"><label>Email (opsional)</label><input type="email" id="c_cp_email" class="fc" placeholder="email@domain.com"></div>
+            </div>
+          </div>
+        </div>
         <div class="fx g10">
           <button class="btn btn-teal" onclick="saveConfig()"><i class="fas fa-save"></i> Simpan</button>
           <button class="btn btn-line" onclick="testKoneksi()"><i class="fas fa-plug"></i> Test Koneksi GAS</button>
@@ -936,6 +968,7 @@ const GAS_URL = 'https://script.google.com/macros/s/AKfycbya4I4Mg6VBobFL7Snt15s6
 
 // ═══════════ STATE ═══════════
 let adminSession = null;
+let sysConfig = {};  // ✨ config dari DB
 let allPeserta = [];
 let pubData = { settings: [], hasil: [], medali: {} };
 let files = { bpti:null, bpjs:null, surat:null, akte:null };
@@ -1023,6 +1056,49 @@ async function loadPublik(){
   renderMedali();
   renderCaborCards();
   renderPortal();
+  // Ambil CP Panitia dari config (public)
+  await loadCPPanitia();
+}
+
+async function loadCPPanitia(){
+  const res = await callGAS('getConfig');
+  if(res && res.success && res.data){
+    sysConfig = res.data;
+    renderCPPanitia(res.data);
+  }
+}
+
+function renderCPPanitia(cfg){
+  const box = document.getElementById('cpPanitiaBox');
+  if(!box) return;
+  const nama  = cfg.cp_nama || 'Panitia O2SN DKI';
+  const nohp  = cfg.cp_nohp || '';
+  const email = cfg.cp_email || '';
+  if(!nohp && !email){
+    box.innerHTML = '<p class="sm mut">CP Panitia belum diset di menu admin.</p>';
+    return;
+  }
+  // No HP → link WhatsApp (format 62xxx)
+  let waNum = nohp.replace(/[^\d]/g,'');
+  if(waNum.startsWith('0')) waNum = '62' + waNum.substring(1);
+  const waLink = waNum ? `https://wa.me/${waNum}` : '';
+  box.innerHTML = `
+    <div class="fx g12 wrap-g">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg);border:1px solid var(--line);border-radius:10px;flex:1;min-width:200px">
+        <div style="width:36px;height:36px;background:var(--teal-50);color:var(--teal);border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-user"></i></div>
+        <div><div class="xs mut">Nama</div><div class="b8 sm">${nama}</div></div>
+      </div>
+      ${nohp ? `
+      <a href="${waLink}" target="_blank" style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#E7F8EE;border:1px solid #BBE5C9;border-radius:10px;flex:1;min-width:200px;color:inherit;text-decoration:none;transition:transform .15s" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform=''">
+        <div style="width:36px;height:36px;background:#25D366;color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fab fa-whatsapp"></i></div>
+        <div><div class="xs mut">WhatsApp</div><div class="b8 sm">${nohp}</div></div>
+      </a>` : ''}
+      ${email ? `
+      <a href="mailto:${email}" style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--coral-soft);border:1px solid #FFD6A8;border-radius:10px;flex:1;min-width:200px;color:inherit;text-decoration:none">
+        <div style="width:36px;height:36px;background:var(--coral);color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center"><i class="fas fa-envelope"></i></div>
+        <div><div class="xs mut">Email</div><div class="b8 sm">${email}</div></div>
+      </a>` : ''}
+    </div>`;
 }
 
 function renderMedali(){
@@ -1320,14 +1396,13 @@ async function cekStatus(){
   }
   const d=res.data;
   const bc=d.status==='Terverifikasi'?'bdg-ok':d.status==='Perlu Perbaikan'?'bdg-x':'bdg-p';
-  // ✨ Helper baru: cek file dari URL atau ID, dengan nama file
-  const fileLink=(url,id,name)=>{
-    const realUrl = url || (id ? `https://drive.google.com/file/d/${id}/view` : '');
-    if(!realUrl) return '<span class="xs mut">Belum ada</span>';
-    const label = name || 'Lihat File';
-    return `<a class="dlink" href="${realUrl}" target="_blank" title="${label}"><i class="fas fa-file-pdf"></i> ${label.length>32?label.substring(0,29)+'...':label}</a>`;
+  // Status dokumen: ✅ Terkirim atau ❌ Belum
+  const statBadge=v=>{
+    return v===true
+      ? '<span class="bdg bdg-ok"><i class="fas fa-check-circle"></i> Terkirim</span>'
+      : '<span class="bdg bdg-x"><i class="fas fa-times-circle"></i> Belum dikirim</span>';
   };
-  const dr=(l,url,id,name)=>`<div class="sdoc"><span>${l}</span>${fileLink(url,id,name)}</div>`;
+  const dr=(l,v)=>`<div class="sdoc"><span>${l}</span>${statBadge(v)}</div>`;
 
   w.innerHTML=`<div class="card mt16"><div class="card-b">
     <div class="fxb mb16">
@@ -1339,11 +1414,11 @@ async function cekStatus(){
       <span class="bdg ${bc}">${d.status}</span>
     </div>
     ${d.catatan_admin?`<div style="background:var(--amber-soft);border:1px solid #FDE68A;border-radius:10px;padding:12px;font-size:12.5px;margin-bottom:14px"><b>Catatan Admin:</b> ${d.catatan_admin}</div>`:''}
-    <div class="b8 xs mut mb6" style="text-transform:uppercase;letter-spacing:.5px">Dokumen</div>
-    ${dr('Bukti BPTI',          d.file_bukti_bpti_url,    d.file_bukti_bpti,    d.file_bukti_bpti_name)}
-    ${dr('BPJS Ketenagakerjaan',d.file_bpjs_url,          d.file_bpjs,          d.file_bpjs_name)}
-    ${dr('Surat Sekolah',       d.file_surat_sekolah_url, d.file_surat_sekolah, d.file_surat_sekolah_name)}
-    ${dr('Akta Kelahiran',      d.file_akte_url,          d.file_akte,          d.file_akte_name)}
+    <div class="b8 xs mut mb6" style="text-transform:uppercase;letter-spacing:.5px">Status Dokumen</div>
+    ${dr('Bukti Pendaftaran BPTI', d.file_bukti_bpti)}
+    ${dr('BPJS Ketenagakerjaan',   d.file_bpjs)}
+    ${dr('Surat Keterangan Sekolah', d.file_surat_sekolah)}
+    ${dr('Akta Kelahiran',         d.file_akte)}
   </div></div>`;
 }
 
@@ -1528,16 +1603,15 @@ async function loadVerif(){
   if(!res||!res.success){tb.innerHTML='<tr><td colspan="6" class="tc mut" style="padding:22px">Gagal</td></tr>';return}
   allPeserta=res.data;
   if(!res.data.length){tb.innerHTML='<tr><td colspan="6" class="tc mut" style="padding:22px">Tidak ada data</td></tr>';return}
-  const di=(url,fid)=>{
-    const u = url || (fid ? `https://drive.google.com/file/d/${fid}/view` : '');
-    return u ? `<a class="dlink" href="${u}" target="_blank"><i class="fas fa-file-pdf"></i></a>` : '<span style="color:var(--line)"><i class="fas fa-xmark"></i></span>';
-  };
+  const di=v=>v===true
+    ? '<i class="fas fa-check-circle" style="color:var(--green);font-size:16px" title="Terkirim"></i>'
+    : '<i class="fas fa-times-circle" style="color:var(--ink-3);font-size:16px" title="Belum"></i>';
   const bc=s=>s==='Terverifikasi'?'bdg-ok':s==='Perlu Perbaikan'?'bdg-x':'bdg-p';
   tb.innerHTML=res.data.map(p=>`<tr>
     <td class="mono">${p.nomor_peserta||'–'}</td>
     <td><div class="b8 xs">${p.nama_lengkap}</div><div class="xs mut">${p.asal_wilayah}</div></td>
     <td class="xs b7">${p.cabor}</td>
-    <td><div class="fx g8">${di(p.file_bukti_bpti_url,p.file_bukti_bpti)}${di(p.file_bpjs_url,p.file_bpjs)}${di(p.file_surat_sekolah_url,p.file_surat_sekolah)}${di(p.file_akte_url,p.file_akte)}</div></td>
+    <td><div class="fx g8">${di(p.file_bukti_bpti)}${di(p.file_bpjs)}${di(p.file_surat_sekolah)}${di(p.file_akte)}</div></td>
     <td><span class="bdg ${bc(p.status)}">${p.status}</span></td>
     <td><button class="btn btn-teal btn-sm" onclick="openVerif(${p.id})"><i class="fas fa-circle-check"></i></button></td>
   </tr>`).join('');
@@ -1546,13 +1620,17 @@ async function loadVerif(){
 function openVerif(id){
   curVerifId=id;
   const p=allPeserta.find(x=>x.id===id)||{};
-  const fileLink=(url,fid,name)=>{
-    const realUrl = url || (fid ? `https://drive.google.com/file/d/${fid}/view` : '');
-    if(!realUrl) return '<span class="xs" style="color:var(--red)">Belum ada</span>';
-    const label = name || 'Buka File';
-    return `<a class="dlink" href="${realUrl}" target="_blank"><i class="fas fa-up-right-from-square"></i> ${label.length>30?label.substring(0,27)+'...':label}</a>`;
-  };
-  const dr=(l,url,fid,name)=>`<div class="sdoc"><span class="sm">${l}</span>${fileLink(url,fid,name)}</div>`;
+  const statBadge=v=>v===true
+    ? '<span class="bdg bdg-ok"><i class="fas fa-check-circle"></i> Terkirim</span>'
+    : '<span class="bdg bdg-x"><i class="fas fa-times-circle"></i> Belum dikirim</span>';
+  const dr=(l,v)=>`<div class="sdoc"><span class="sm">${l}</span>${statBadge(v)}</div>`;
+
+  // Link folder Drive (admin bisa cek manual)
+  const driveFolderUrl = sysConfig?.gdrive_folder_url || '';
+  const driveBtn = driveFolderUrl
+    ? `<a href="${driveFolderUrl}" target="_blank" class="btn btn-line btn-sm" style="margin-top:8px"><i class="fab fa-google-drive"></i> Buka Folder Drive</a>`
+    : '';
+
   document.getElementById('mVerifBody').innerHTML=`
     <div class="mb16">
       <div class="mono b8" style="color:var(--teal-dark)">${p.nomor_peserta||'–'}</div>
@@ -1560,11 +1638,12 @@ function openVerif(id){
       <div class="sm mut">${p.cabor||''} · ${p.asal_wilayah||''} · ${p.jenis_kelamin||''}</div>
       <div class="xs mut" style="margin-top:4px">NISN ${p.nisn||''} · ${p.nama_sekolah||''}</div>
     </div>
-    <div class="b8 xs mut mb6" style="text-transform:uppercase">Dokumen</div>
-    ${dr('Bukti BPTI',          p.file_bukti_bpti_url,    p.file_bukti_bpti,    p.file_bukti_bpti_name)}
-    ${dr('BPJS Ketenagakerjaan',p.file_bpjs_url,          p.file_bpjs,          p.file_bpjs_name)}
-    ${dr('Surat Sekolah',       p.file_surat_sekolah_url, p.file_surat_sekolah, p.file_surat_sekolah_name)}
-    ${dr('Akta Kelahiran',      p.file_akte_url,          p.file_akte,          p.file_akte_name)}`;
+    <div class="b8 xs mut mb6" style="text-transform:uppercase">Status Dokumen</div>
+    ${dr('Bukti Pendaftaran BPTI', p.file_bukti_bpti)}
+    ${dr('BPJS Ketenagakerjaan',   p.file_bpjs)}
+    ${dr('Surat Keterangan Sekolah', p.file_surat_sekolah)}
+    ${dr('Akta Kelahiran',         p.file_akte)}
+    ${driveBtn ? `<div class="xs mut" style="margin-top:10px"><i class="fas fa-info-circle"></i> Lihat file fisik di folder Google Drive: cari file dengan nama "${p.nama_lengkap}_${p.asal_wilayah}_..."</div>${driveBtn}` : ''}`;
   document.getElementById('mCatatan').value=p.catatan_admin||'';
   openM('mVerif');
 }
@@ -1841,11 +1920,16 @@ async function loadAdminConfig(){
   const res=await callGAS('getConfig');
   if(!res||!res.success)return;
   const d=res.data;
+  sysConfig=d;
   document.getElementById('c_fid').value=d.gdrive_folder_id||'';
   document.getElementById('c_furl').value=d.gdrive_folder_url||'';
   document.getElementById('c_thn').value=d.tahun||'2026';
   document.getElementById('c_lmin').value=d.batas_lahir_min||'2013-01-01';
   document.getElementById('c_lmax').value=d.batas_lahir_max||'2018-12-31';
+  // ✨ CP Panitia
+  document.getElementById('c_cp_nama').value=d.cp_nama||'';
+  document.getElementById('c_cp_nohp').value=d.cp_nohp||'';
+  document.getElementById('c_cp_email').value=d.cp_email||'';
 }
 
 async function saveConfig(){
@@ -1854,7 +1938,8 @@ async function saveConfig(){
     username:adminSession.username,password:adminSession.password,
     configs:{
       gdrive_folder_id:v('c_fid'),gdrive_folder_url:v('c_furl'),
-      tahun:v('c_thn'),batas_lahir_min:v('c_lmin'),batas_lahir_max:v('c_lmax')
+      tahun:v('c_thn'),batas_lahir_min:v('c_lmin'),batas_lahir_max:v('c_lmax'),
+      cp_nama: v('c_cp_nama'), cp_nohp: v('c_cp_nohp'), cp_email: v('c_cp_email')
     }
   });
   lov(false);

@@ -344,7 +344,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
     <h2>Jadilah Juara di <em>O2SN SD</em><br>Provinsi DKI Jakarta</h2>
     <p>Portal resmi pendataan atlet dan pengumuman hasil pertandingan Olimpiade Olahraga Siswa Nasional jenjang Sekolah Dasar.</p>
     <div class="hero-cta">
-      <button class="btn btn-coral" onclick="showView('form-daftar')"><i class="fas fa-user-plus"></i>Input Data Peserta</button>
+      <button class="btn btn-coral" onclick="showView('form-daftar')"><i class="fas fa-user-plus"></i> Data Peserta Sekarang</button>
       <button class="btn btn-ghostw" onclick="showView('cek-status')"><i class="fas fa-magnifying-glass"></i> Cek Status Pendataan</button>
     </div>
   </div>
@@ -1396,11 +1396,12 @@ async function cekStatus(){
   }
   const d=res.data;
   const bc=d.status==='Terverifikasi'?'bdg-ok':d.status==='Perlu Perbaikan'?'bdg-x':'bdg-p';
-  // Status dokumen: ✅ Terkirim atau ❌ Belum
-  const statBadge=v=>{
-    return v===true
-      ? '<span class="bdg bdg-ok"><i class="fas fa-check-circle"></i> Terkirim</span>'
-      : '<span class="bdg bdg-x"><i class="fas fa-times-circle"></i> Belum dikirim</span>';
+  // Status dokumen: ✅ Diverifikasi atau ⏳ Menunggu / ❌ Belum upload
+  // Logic: TRUE = admin sudah verifikasi (atau auto-true saat submit)
+  //        FALSE = admin uncheck (file salah, harus upload ulang) atau belum submit
+  const statBadge=(v)=>{
+    if(v===true) return '<span class="bdg bdg-ok"><i class="fas fa-check-circle"></i> Diterima</span>';
+    return '<span class="bdg bdg-x"><i class="fas fa-times-circle"></i> Perlu diunggah ulang</span>';
   };
   const dr=(l,v)=>`<div class="sdoc"><span>${l}</span>${statBadge(v)}</div>`;
 
@@ -1620,15 +1621,25 @@ async function loadVerif(){
 function openVerif(id){
   curVerifId=id;
   const p=allPeserta.find(x=>x.id===id)||{};
-  const statBadge=v=>v===true
-    ? '<span class="bdg bdg-ok"><i class="fas fa-check-circle"></i> Terkirim</span>'
-    : '<span class="bdg bdg-x"><i class="fas fa-times-circle"></i> Belum dikirim</span>';
-  const dr=(l,v)=>`<div class="sdoc"><span class="sm">${l}</span>${statBadge(v)}</div>`;
 
-  // Link folder Drive (admin bisa cek manual)
+  // ✨ Checkbox interaktif per dokumen — admin bisa uncheck kalau file salah
+  const cbRow=(l, field, val)=>{
+    const checked = val===true;
+    const safeId  = 'cb_'+field;
+    return `<div class="sdoc" style="padding:10px 0">
+      <span class="sm">${l}</span>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none">
+        <input type="checkbox" id="${safeId}" ${checked?'checked':''}
+          onchange="toggleDokStatus(${id},'${field}',this.checked)"
+          style="width:18px;height:18px;accent-color:var(--green);cursor:pointer">
+        <span class="xs b7" id="lbl_${field}" style="min-width:90px;color:${checked?'var(--green)':'var(--ink-3)'}">${checked?'✅ Terverifikasi':'⏳ Belum'}</span>
+      </label>
+    </div>`;
+  };
+
   const driveFolderUrl = sysConfig?.gdrive_folder_url || '';
   const driveBtn = driveFolderUrl
-    ? `<a href="${driveFolderUrl}" target="_blank" class="btn btn-line btn-sm" style="margin-top:8px"><i class="fab fa-google-drive"></i> Buka Folder Drive</a>`
+    ? `<a href="${driveFolderUrl}" target="_blank" class="btn btn-line btn-sm" style="margin-top:10px"><i class="fab fa-google-drive"></i> Buka Folder Drive untuk Cek File</a>`
     : '';
 
   document.getElementById('mVerifBody').innerHTML=`
@@ -1638,14 +1649,58 @@ function openVerif(id){
       <div class="sm mut">${p.cabor||''} · ${p.asal_wilayah||''} · ${p.jenis_kelamin||''}</div>
       <div class="xs mut" style="margin-top:4px">NISN ${p.nisn||''} · ${p.nama_sekolah||''}</div>
     </div>
-    <div class="b8 xs mut mb6" style="text-transform:uppercase">Status Dokumen</div>
-    ${dr('Bukti Pendaftaran BPTI', p.file_bukti_bpti)}
-    ${dr('BPJS Ketenagakerjaan',   p.file_bpjs)}
-    ${dr('Surat Keterangan Sekolah', p.file_surat_sekolah)}
-    ${dr('Akta Kelahiran',         p.file_akte)}
-    ${driveBtn ? `<div class="xs mut" style="margin-top:10px"><i class="fas fa-info-circle"></i> Lihat file fisik di folder Google Drive: cari file dengan nama "${p.nama_lengkap}_${p.asal_wilayah}_..."</div>${driveBtn}` : ''}`;
+    <div class="b8 xs mut mb6" style="text-transform:uppercase">Verifikasi Dokumen</div>
+    <div class="xs mut mb12" style="background:var(--teal-50);padding:10px 12px;border-radius:8px;border:1px solid var(--teal-100)">
+      <i class="fas fa-info-circle"></i> Centang setelah file dicek di Google Drive. Uncheck jika file salah → peserta akan tahu harus upload ulang.
+    </div>
+    ${cbRow('Bukti Pendaftaran BPTI', 'file_bukti_bpti',    p.file_bukti_bpti)}
+    ${cbRow('BPJS Ketenagakerjaan',   'file_bpjs',          p.file_bpjs)}
+    ${cbRow('Surat Keterangan Sekolah', 'file_surat_sekolah', p.file_surat_sekolah)}
+    ${cbRow('Akta Kelahiran',         'file_akte',          p.file_akte)}
+    <div class="xs mut" style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px">
+      <i class="fas fa-folder-open"></i> Cari file di Drive: <b>${p.nama_lengkap||''}_${p.asal_wilayah||''}_...</b>
+    </div>
+    ${driveBtn}`;
   document.getElementById('mCatatan').value=p.catatan_admin||'';
   openM('mVerif');
+}
+
+// ✨ Toggle status dokumen oleh admin (centang/uncheck)
+async function toggleDokStatus(id, field, value){
+  if(adminSession?.demo){
+    // Demo: update local
+    const p = allPeserta.find(x=>x.id===id);
+    if(p) p[field] = value;
+    updateCbLabel(field, value);
+    toast('Mode demo: '+(value?'dicentang':'di-uncheck'),'');
+    return;
+  }
+  const res = await callGAS('setDokStatus',{
+    username: adminSession.username, password: adminSession.password,
+    id: id, field: field, value: value
+  });
+  if(res && res.success){
+    // Update state lokal agar konsisten
+    const p = allPeserta.find(x=>x.id===id);
+    if(p) p[field] = value;
+    updateCbLabel(field, value);
+    toast(value?'✅ Dokumen diverifikasi':'⏳ Verifikasi dicabut','success');
+    // Refresh tabel
+    if(document.getElementById('at-verif').classList.contains('active')) loadVerif();
+    if(document.getElementById('at-peserta').classList.contains('active')) renderPeserta(allPeserta);
+  } else {
+    toast('Gagal: '+(res?.message||'unknown'),'error');
+    // Rollback checkbox
+    document.getElementById('cb_'+field).checked = !value;
+  }
+}
+
+function updateCbLabel(field, value){
+  const lbl = document.getElementById('lbl_'+field);
+  if(lbl){
+    lbl.textContent = value ? '✅ Terverifikasi' : '⏳ Belum';
+    lbl.style.color = value ? 'var(--green)' : 'var(--ink-3)';
+  }
 }
 
 async function setStatus(st){

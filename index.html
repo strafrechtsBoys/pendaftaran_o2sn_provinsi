@@ -487,8 +487,10 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
         <div class="fgrid">
           <div class="fg">
             <label>NISN <span class="rq">*</span></label>
-            <input type="text" id="f_nisn" class="fc" placeholder="10 digit NISN" maxlength="10" inputmode="numeric">
-            <div class="fhint">Nomor Induk Siswa Nasional</div>
+            <input type="text" id="f_nisn" class="fc" placeholder="10 digit NISN" maxlength="10" inputmode="numeric" onchange="cekNisnAlert()">
+            <div class="fhint" style="background:var(--red-soft);border:1px solid #FECACA;border-radius:6px;padding:7px 10px;color:#B91C1C">
+              <i class="fas fa-exclamation-triangle"></i> <b>Perhatian:</b> Pastikan NISN benar! NISN tidak dapat diubah setelah data terkirim. Periksa kembali sebelum klik Lanjut.
+            </div>
             <div class="ferr" id="e_nisn"></div>
           </div>
           <div class="fg">
@@ -504,7 +506,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
           </div>
           <div class="fg">
             <label>Jenis Kelamin <span class="rq">*</span></label>
-            <select id="f_jk" class="fc">
+            <select id="f_jk" class="fc" onchange="onGenderChanged()">
               <option value="">— Pilih —</option>
               <option>Putra</option><option>Putri</option>
             </select>
@@ -684,6 +686,150 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
       </div>
     </div>
     <div id="statusResult"></div>
+  </div>
+</div>
+
+<!-- ════════════ VIEW: FORM PERBAIKAN ════════════ -->
+<div class="view" id="view-perbaikan">
+  <div class="fxb mb20">
+    <div>
+      <div class="xs mut mb6">Perbaikan Data</div>
+      <h2 class="b8" style="font-size:22px;letter-spacing:-.4px">Form Perbaikan Data Peserta</h2>
+    </div>
+    <button class="btn btn-line btn-sm" onclick="showView('cek-status')"><i class="fas fa-arrow-left"></i> Batal</button>
+  </div>
+
+  <!-- Catatan admin -->
+  <div id="catatanAdminBox" style="display:none;background:var(--amber-soft);border:1.5px solid #FDE68A;border-radius:14px;padding:14px 18px;margin-bottom:18px">
+    <div class="b8 mb6" style="color:#92400E;font-size:13.5px"><i class="fas fa-comment-dots"></i> Catatan dari Panitia:</div>
+    <div id="catatanAdminText" class="sm" style="color:#78350F"></div>
+    <div class="xs mt12" style="color:#92400E"><i class="fas fa-info-circle"></i> Silakan perbaiki data sesuai catatan di atas, lalu kirim ulang.</div>
+  </div>
+
+  <!-- Data terkunci -->
+  <div class="card">
+    <div class="card-h">
+      <div class="card-h-ico" style="background:#F1F5F9;color:var(--ink-3)"><i class="fas fa-lock"></i></div>
+      <div>
+        <div class="card-h-t">Data Identitas (Terkunci)</div>
+        <div class="card-h-s">NISN, Tanggal Lahir, Jenis Kelamin tidak dapat diubah</div>
+      </div>
+    </div>
+    <div class="card-b">
+      <div class="fgrid">
+        <div class="fg">
+          <label>NISN <i class="fas fa-lock" style="color:var(--ink-3);font-size:10px"></i></label>
+          <input type="text" id="pb_nisn" class="fc" readonly style="background:var(--bg);color:var(--ink-3);cursor:not-allowed">
+        </div>
+        <div class="fg">
+          <label>Tanggal Lahir <i class="fas fa-lock" style="color:var(--ink-3);font-size:10px"></i></label>
+          <input type="date" id="pb_tgl" class="fc" readonly style="background:var(--bg);color:var(--ink-3);cursor:not-allowed">
+        </div>
+        <div class="fg">
+          <label>Jenis Kelamin <i class="fas fa-lock" style="color:var(--ink-3);font-size:10px"></i></label>
+          <input type="text" id="pb_jk" class="fc" readonly style="background:var(--bg);color:var(--ink-3);cursor:not-allowed">
+        </div>
+      </div>
+      <div class="xs mut mt12" style="background:var(--red-soft);padding:10px 12px;border-radius:8px;border:1px solid #FECACA;color:var(--red)">
+        <i class="fas fa-exclamation-triangle"></i> <b>Penting:</b> Jika NISN salah, Anda tidak bisa memperbaikinya di sini. Hubungi panitia atau lakukan pendataan ulang dengan NISN yang benar.
+      </div>
+    </div>
+  </div>
+
+  <!-- Data yang bisa diedit -->
+  <div class="card">
+    <div class="card-h">
+      <div class="card-h-ico" style="background:var(--teal-50);color:var(--teal)"><i class="fas fa-pen-to-square"></i></div>
+      <div><div class="card-h-t">Data yang Dapat Diperbaiki</div></div>
+    </div>
+    <div class="card-b">
+      <div class="fgrid">
+        <div class="fg span2"><label>Nama Lengkap</label><input type="text" id="pb_nama" class="fc"></div>
+        <div class="fg span2"><label>Nama Sekolah</label><input type="text" id="pb_sek" class="fc"></div>
+        <div class="fg"><label>NPSN</label><input type="text" id="pb_npsn" class="fc" maxlength="8" inputmode="numeric"></div>
+        <div class="fg">
+          <label>Asal Wilayah</label>
+          <select id="pb_wil" class="fc">
+            <option value="">— Pilih —</option>
+            <option>Jakarta Utara 1</option><option>Jakarta Utara 2</option>
+            <option>Jakarta Barat 1</option><option>Jakarta Barat 2</option>
+            <option>Jakarta Selatan 1</option><option>Jakarta Selatan 2</option>
+            <option>Jakarta Pusat 1</option><option>Jakarta Pusat 2</option>
+            <option>Jakarta Timur 1</option><option>Jakarta Timur 2</option>
+            <option>Kepulauan Seribu</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Cabor</label>
+          <select id="pb_cabor" class="fc" onchange="updateKategoriPerbaikan()">
+            <option value="">— Pilih —</option>
+            <option>Renang</option><option>Atletik</option><option>Bulutangkis</option>
+            <option>Pencak Silat</option><option>Senam</option>
+          </select>
+        </div>
+        <div class="fg"><label>Kategori (sekarang)</label><input type="text" id="pb_kat_now" class="fc" readonly style="background:var(--bg);color:var(--ink-3)"></div>
+        <div class="fg span2"><label>Pendamping</label><input type="text" id="pb_pend" class="fc"></div>
+        <div class="fg"><label>HP Pendamping</label><input type="tel" id="pb_hppend" class="fc" inputmode="tel"></div>
+        <div class="fg"><label>HP Orang Tua</label><input type="tel" id="pb_hportu" class="fc" inputmode="tel"></div>
+      </div>
+
+      <div id="pbKatBox" class="kat-box mt16" style="display:none">
+        <div class="kt"><i class="fas fa-list-check"></i> Pilih Ulang Kategori (jika cabor diubah)</div>
+        <div class="kat-list" id="pbKatList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload ulang dokumen -->
+  <div class="card">
+    <div class="card-h">
+      <div class="card-h-ico" style="background:var(--coral-soft);color:var(--coral)"><i class="fas fa-cloud-arrow-up"></i></div>
+      <div>
+        <div class="card-h-t">Upload Ulang Dokumen</div>
+        <div class="card-h-s">Hanya upload dokumen yang perlu diperbaiki — kosongkan yang lain</div>
+      </div>
+    </div>
+    <div class="card-b">
+      <div class="up-grid">
+        <label class="up-zone" id="pbz_bpti" for="pbfile_bpti">
+          <input type="file" id="pbfile_bpti" accept="application/pdf" onchange="pickPerbaikan(event,'bpti')">
+          <div class="up-ico"><i class="fas fa-file-invoice"></i></div>
+          <div class="up-lbl">Bukti Pendaftaran BPTI</div>
+          <div class="up-hint">Klik untuk upload ulang (opsional)</div>
+          <div class="up-file" id="pbzf_bpti"></div>
+          <div class="up-state" id="pbzs_bpti"></div>
+        </label>
+        <label class="up-zone" id="pbz_bpjs" for="pbfile_bpjs">
+          <input type="file" id="pbfile_bpjs" accept="application/pdf" onchange="pickPerbaikan(event,'bpjs')">
+          <div class="up-ico"><i class="fas fa-id-card"></i></div>
+          <div class="up-lbl">BPJS Ketenagakerjaan</div>
+          <div class="up-hint">Klik untuk upload ulang (opsional)</div>
+          <div class="up-file" id="pbzf_bpjs"></div>
+          <div class="up-state" id="pbzs_bpjs"></div>
+        </label>
+        <label class="up-zone" id="pbz_surat" for="pbfile_surat">
+          <input type="file" id="pbfile_surat" accept="application/pdf" onchange="pickPerbaikan(event,'surat')">
+          <div class="up-ico"><i class="fas fa-file-lines"></i></div>
+          <div class="up-lbl">Surat Keterangan Sekolah</div>
+          <div class="up-hint">Klik untuk upload ulang (opsional)</div>
+          <div class="up-file" id="pbzf_surat"></div>
+          <div class="up-state" id="pbzs_surat"></div>
+        </label>
+        <label class="up-zone" id="pbz_akte" for="pbfile_akte">
+          <input type="file" id="pbfile_akte" accept="application/pdf" onchange="pickPerbaikan(event,'akte')">
+          <div class="up-ico"><i class="fas fa-baby"></i></div>
+          <div class="up-lbl">Akta Kelahiran</div>
+          <div class="up-hint">Klik untuk upload ulang (opsional)</div>
+          <div class="up-file" id="pbzf_akte"></div>
+          <div class="up-state" id="pbzs_akte"></div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="fxb mb24">
+    <button class="btn btn-line" onclick="showView('cek-status')"><i class="fas fa-arrow-left"></i> Batal</button>
+    <button class="btn btn-coral" id="btnSubmitPerbaikan" onclick="submitPerbaikan()"><i class="fas fa-paper-plane"></i> Kirim Perbaikan</button>
   </div>
 </div>
 
@@ -874,6 +1020,35 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
       <!-- TAB KONFIG -->
       <div class="atab" id="at-konfig">
         <h3 class="b8 mb16" style="font-size:18px">Konfigurasi</h3>
+
+        <!-- ✨ Logo Kop Bukti Pendataan -->
+        <div class="card">
+          <div class="card-h">
+            <div class="card-h-ico" style="background:#FEE7E5;color:var(--coral)"><i class="fas fa-image"></i></div>
+            <div>
+              <div class="card-h-t">Logo Kop Bukti Pendataan</div>
+              <div class="card-h-s">URL logo untuk header cetak bukti pendataan</div>
+            </div>
+          </div>
+          <div class="card-b">
+            <div class="fgrid">
+              <div class="fg">
+                <label>Logo Kiri (Dinas Pendidikan)</label>
+                <input type="url" id="c_logo_kiri" class="fc" placeholder="https://... atau assets/logo-dinas.png">
+                <div class="fhint">Default: assets/logo-pemprov-dki.png</div>
+              </div>
+              <div class="fg">
+                <label>Logo Kanan (KKG DKI)</label>
+                <input type="url" id="c_logo_kanan" class="fc" placeholder="https://... atau assets/logo-kkg.png">
+                <div class="fhint">Default: assets/logo-o2sn.png</div>
+              </div>
+            </div>
+            <div class="xs mut mt12" style="background:var(--teal-50);padding:10px 12px;border-radius:8px;border:1px solid var(--teal-100)">
+              <i class="fas fa-info-circle"></i> Bisa pakai URL publik (Google Drive sharing, Imgur, dll) atau file di folder <code>assets/</code>. Kosongkan untuk pakai default.
+            </div>
+          </div>
+        </div>
+
         <div class="card">
           <div class="card-h">
             <div class="card-h-ico" style="background:var(--green-soft);color:var(--green)"><i class="fab fa-google-drive"></i></div>
@@ -1244,13 +1419,45 @@ function validate(step){
 }
 function v(id){return (document.getElementById(id).value||'').trim()}
 
-// ═══════════ KATEGORI ═══════════
+// ✨ Alert popup saat NISN diinput
+function cekNisnAlert(){
+  const nisn = v('f_nisn');
+  if(nisn && /^\d{10}$/.test(nisn)){
+    // Tampilkan toast pengingat
+    toast('⚠️ Pastikan NISN '+nisn+' benar! Tidak dapat diubah setelah submit','error');
+  }
+}
+
+// ═══════════ KATEGORI — difilter berdasarkan gender ═══════════
 function updateKategori(){
-  const c=v('f_cabor'),box=document.getElementById('katBox'),list=document.getElementById('katList');
+  const c=v('f_cabor');
+  const gender=v('f_jk');   // ✨ ambil gender dari step 1
+  const box=document.getElementById('katBox');
+  const list=document.getElementById('katList');
   list.innerHTML='';
-  if(!c){box.style.display='none';return}
+  if(!c){ box.style.display='none'; return; }
+
+  // Validasi gender harus dipilih dulu
+  if(!gender){
+    box.style.display='block';
+    list.innerHTML='<div class="xs" style="color:var(--red);padding:8px"><i class="fas fa-exclamation-triangle"></i> Pilih Jenis Kelamin di Step 1 dulu untuk melihat kategori yang sesuai.</div>';
+    return;
+  }
+
+  // ✨ Filter: hanya kategori yang sesuai gender peserta
+  const filtered = (KATEGORI_MAP[c]||[]).filter(k => {
+    // Kategori "Tunggal Putra"/"Tunggal Putri" tanpa kata gender penuh tetap mengandung Putra/Putri
+    return k.includes(gender);
+  });
+
   box.style.display='block';
-  (KATEGORI_MAP[c]||[]).forEach((k,idx)=>{
+
+  if(filtered.length===0){
+    list.innerHTML='<div class="xs mut" style="padding:8px">Tidak ada kategori '+gender+' untuk cabor ini.</div>';
+    return;
+  }
+
+  filtered.forEach((k,idx)=>{
     const wajib=k.includes('(Wajib)');
     const id='kat'+idx;
     const div=document.createElement('div');
@@ -1265,6 +1472,15 @@ function updateKategori(){
     }
     list.appendChild(div);
   });
+}
+
+// ✨ Saat gender step 1 berubah, kategori di step 3 perlu re-render
+function onGenderChanged(){
+  // Reset pilihan kategori sebelumnya jika ada
+  const list=document.getElementById('katList');
+  if(list && list.children.length>0){
+    updateKategori();  // re-render dengan filter gender baru
+  }
 }
 
 // ═══════════ UPLOAD — FIX: label+hidden input, indikator jelas ═══════════
@@ -1406,6 +1622,13 @@ async function cekStatus(){
   };
   const dr=(l,v)=>`<div class="sdoc"><span>${l}</span>${statBadge(v)}</div>`;
 
+  // ✨ Tombol perbaiki hanya muncul jika status = Perlu Perbaikan
+  const perbaikiBtn = d.status==='Perlu Perbaikan' ? `
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line);text-align:center">
+      <p class="sm mb12" style="color:var(--red)"><i class="fas fa-exclamation-triangle"></i> Ada data yang perlu diperbaiki sesuai catatan panitia.</p>
+      <button class="btn btn-coral" onclick="bukaFormPerbaikan('${v('inKode').toUpperCase()}')"><i class="fas fa-pen-to-square"></i> Perbaiki Data & Kirim Ulang</button>
+    </div>` : '';
+
   w.innerHTML=`<div class="card mt16"><div class="card-b">
     <div class="fxb mb16">
       <div>
@@ -1421,7 +1644,196 @@ async function cekStatus(){
     ${dr('BPJS Ketenagakerjaan',   d.file_bpjs)}
     ${dr('Surat Keterangan Sekolah', d.file_surat_sekolah)}
     ${dr('Akta Kelahiran',         d.file_akte)}
+    ${perbaikiBtn}
   </div></div>`;
+}
+
+// ═══════════ PERBAIKAN DATA ═══════════════════════════════════
+let perbaikanData = null;
+let perbaikanFiles = { bpti:null, bpjs:null, surat:null, akte:null };
+
+async function bukaFormPerbaikan(kode){
+  if(!kode){ toast('Kode kosong','error'); return; }
+  lov(true,'Memuat data...');
+  const res = await callGAS('getDataPerbaikan',{ kode_verifikasi: kode });
+  lov(false);
+  if(!res || !res.success){
+    toast(res?.message || 'Gagal memuat data','error');
+    return;
+  }
+  perbaikanData = res.data;
+  perbaikanFiles = { bpti:null, bpjs:null, surat:null, akte:null };
+
+  document.getElementById('pb_nisn').value = perbaikanData.nisn || '';
+  document.getElementById('pb_tgl').value  = perbaikanData.tanggal_lahir || '';
+  document.getElementById('pb_jk').value   = perbaikanData.jenis_kelamin || '';
+
+  document.getElementById('pb_nama').value   = perbaikanData.nama_lengkap || '';
+  document.getElementById('pb_sek').value    = perbaikanData.nama_sekolah || '';
+  document.getElementById('pb_npsn').value   = perbaikanData.npsn || '';
+  document.getElementById('pb_wil').value    = perbaikanData.asal_wilayah || '';
+  document.getElementById('pb_cabor').value  = perbaikanData.cabor || '';
+  document.getElementById('pb_kat_now').value= perbaikanData.kategori || '';
+  document.getElementById('pb_pend').value   = perbaikanData.nama_pendamping || '';
+  document.getElementById('pb_hppend').value = perbaikanData.hp_pendamping || '';
+  document.getElementById('pb_hportu').value = perbaikanData.hp_orangtua || '';
+
+  if(perbaikanData.catatan_admin){
+    document.getElementById('catatanAdminBox').style.display='block';
+    document.getElementById('catatanAdminText').textContent = perbaikanData.catatan_admin;
+  } else {
+    document.getElementById('catatanAdminBox').style.display='none';
+  }
+
+  ['bpti','bpjs','surat','akte'].forEach(k=>{
+    const z=document.getElementById('pbz_'+k);
+    if(z) z.classList.remove('sel','ok','fail');
+    const inp=document.getElementById('pbfile_'+k);
+    if(inp) inp.value='';
+    const zf=document.getElementById('pbzf_'+k);
+    if(zf) zf.textContent='';
+    const zs=document.getElementById('pbzs_'+k);
+    if(zs) zs.textContent='';
+  });
+
+  document.getElementById('pbKatBox').style.display='none';
+  showView('perbaikan');
+}
+
+function updateKategoriPerbaikan(){
+  const newCabor = v('pb_cabor');
+  const origCabor = perbaikanData?.cabor || '';
+  const gender = perbaikanData?.jenis_kelamin || '';
+  const box = document.getElementById('pbKatBox');
+  const list = document.getElementById('pbKatList');
+
+  if(!newCabor || newCabor===origCabor){
+    box.style.display='none';
+    list.innerHTML='';
+    return;
+  }
+
+  box.style.display='block';
+  const filtered = (KATEGORI_MAP[newCabor]||[]).filter(k => k.includes(gender));
+  list.innerHTML='';
+  if(filtered.length===0){
+    list.innerHTML='<div class="xs mut">Tidak ada kategori untuk gender ini.</div>';
+    return;
+  }
+  filtered.forEach((k,idx)=>{
+    const wajib=k.includes('(Wajib)');
+    const id='pbkat'+idx;
+    const div=document.createElement('div');
+    div.className='kat-item'+(wajib?' on':'');
+    div.innerHTML=`<input type="checkbox" id="${id}" value="${k}" ${wajib?'checked disabled':''}><span>${k}${wajib?' — wajib':''}</span>`;
+    if(!wajib){
+      div.addEventListener('click',function(e){
+        const cb=this.querySelector('input');
+        if(e.target!==cb)cb.checked=!cb.checked;
+        this.classList.toggle('on',cb.checked);
+      });
+    }
+    list.appendChild(div);
+  });
+}
+
+function pickPerbaikan(e,key){
+  const f=e.target.files[0];
+  const zone=document.getElementById('pbz_'+key);
+  const zf=document.getElementById('pbzf_'+key);
+  const zs=document.getElementById('pbzs_'+key);
+
+  zone.classList.remove('sel','ok','fail');
+  if(!f){ perbaikanFiles[key]=null; zf.textContent=''; zs.textContent=''; return; }
+
+  if(f.type!=='application/pdf'){
+    zone.classList.add('fail');
+    zf.textContent=f.name;
+    zs.innerHTML='<i class="fas fa-circle-xmark"></i> Bukan PDF';
+    perbaikanFiles[key]=null; e.target.value='';
+    toast('File harus PDF','error'); return;
+  }
+  if(f.size > 2*1024*1024){
+    zone.classList.add('fail');
+    zf.textContent=f.name;
+    zs.innerHTML='<i class="fas fa-circle-xmark"></i> Melebihi 2MB';
+    perbaikanFiles[key]=null; e.target.value='';
+    toast('Maksimal 2MB','error'); return;
+  }
+
+  perbaikanFiles[key]=f;
+  zone.classList.add('sel');
+  zf.textContent=f.name+' ('+(f.size/1024).toFixed(0)+' KB)';
+  zs.innerHTML='<i class="fas fa-circle-check"></i> Siap diupload';
+}
+
+async function submitPerbaikan(){
+  if(!perbaikanData){ toast('Data tidak valid','error'); return; }
+
+  const namaBaru = v('pb_nama').toUpperCase();
+  if(!namaBaru){ toast('Nama tidak boleh kosong','error'); return; }
+
+  const newCabor = v('pb_cabor');
+  let kategoriFinal = v('pb_kat_now');
+  if(newCabor !== perbaikanData.cabor){
+    const cats = Array.from(document.querySelectorAll('#pbKatList input:checked')).map(c=>c.value);
+    if(cats.length===0){ toast('Pilih minimal 1 kategori untuk cabor baru','error'); return; }
+    kategoriFinal = cats.join(', ');
+  }
+
+  document.getElementById('btnSubmitPerbaikan').disabled=true;
+  lov(true,'Mengirim perbaikan...');
+
+  const revisiBaru = (parseInt(perbaikanData.revisi_count)||0) + 1;
+  const dokUploaded = [];
+  Object.keys(perbaikanFiles).forEach(k=>{ if(perbaikanFiles[k]) dokUploaded.push(k); });
+
+  const res = await callGAS('submitPerbaikan',{
+    kode_verifikasi: perbaikanData.kode_verifikasi,
+    nama_lengkap:    namaBaru,
+    nama_sekolah:    v('pb_sek'),
+    npsn:            v('pb_npsn'),
+    asal_wilayah:    v('pb_wil'),
+    cabor:           newCabor,
+    kategori:        kategoriFinal,
+    nama_pendamping: v('pb_pend'),
+    hp_pendamping:   v('pb_hppend'),
+    hp_orangtua:     v('pb_hportu'),
+    dokumen_diupload: dokUploaded
+  });
+
+  if(!res || !res.success){
+    lov(false);
+    document.getElementById('btnSubmitPerbaikan').disabled=false;
+    toast(res?.message || 'Gagal kirim perbaikan','error');
+    return;
+  }
+
+  const map={ bpti:'bukti_bpti', bpjs:'bpjs', surat:'surat_sekolah', akte:'akte' };
+  for(const [key,tipe] of Object.entries(map)){
+    if(!perbaikanFiles[key]) continue;
+    lov(true,'Mengupload ulang '+key.toUpperCase()+'...');
+    const b64 = await toB64(perbaikanFiles[key]);
+    await callGAS('uploadDokumen',{
+      id: perbaikanData.id,
+      kode_verifikasi: perbaikanData.kode_verifikasi,
+      file_name: perbaikanFiles[key].name,
+      file_type: perbaikanFiles[key].type,
+      file_data: b64,
+      tipe_dokumen: tipe,
+      nama_siswa: namaBaru,
+      asal_wilayah: v('pb_wil'),
+      revisi_ke: revisiBaru
+    });
+  }
+
+  lov(false);
+  document.getElementById('btnSubmitPerbaikan').disabled=false;
+  toast('✅ Perbaikan terkirim. Status kembali ke Pending — menunggu verifikasi ulang','success');
+
+  perbaikanData = null;
+  showView('cek-status');
+  setTimeout(()=>cekStatus(), 300);
 }
 
 // ═══════════ PRINT ═══════════
@@ -1440,14 +1852,14 @@ function printBukti(){
 
     <!-- KOP SURAT -->
     <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:4px double #000;padding-bottom:14px;margin-bottom:18px">
-      <img src="assets/logo-pemprov-dki.png" alt="Pemprov DKI" style="width:78px;height:78px;object-fit:contain">
+      <img src="${sysConfig?.logo_kiri || 'assets/logo-pemprov-dki.png'}" alt="Logo Kiri" style="width:78px;height:78px;object-fit:contain" onerror="this.src='assets/logo-pemprov-dki.png'">
       <div style="flex:1;text-align:center;padding:0 14px">
         <div style="font-size:13px;font-weight:700;letter-spacing:1px">PEMERINTAH PROVINSI DKI JAKARTA</div>
         <div style="font-size:12px;letter-spacing:.5px">DINAS PENDIDIKAN</div>
         <div style="font-size:16px;font-weight:800;margin-top:4px;letter-spacing:.5px">PANITIA O2SN SD TINGKAT PROVINSI 2026</div>
         <div style="font-size:11px;color:#444;margin-top:3px">Sekretariat: KKG PJOK Provinsi DKI Jakarta · Tahun 2026</div>
       </div>
-      <img src="assets/logo-o2sn.png" alt="O2SN" style="width:78px;height:78px;object-fit:contain;border-radius:50%">
+      <img src="${sysConfig?.logo_kanan || 'assets/logo-o2sn.png'}" alt="Logo Kanan" style="width:78px;height:78px;object-fit:contain;border-radius:50%" onerror="this.src='assets/logo-o2sn.png'">
     </div>
 
     <!-- JUDUL -->
@@ -1986,6 +2398,9 @@ async function loadAdminConfig(){
   document.getElementById('c_cp_nama').value=d.cp_nama||'';
   document.getElementById('c_cp_nohp').value=d.cp_nohp||'';
   document.getElementById('c_cp_email').value=d.cp_email||'';
+  // ✨ Logo kop bukti
+  document.getElementById('c_logo_kiri').value=d.logo_kiri||'';
+  document.getElementById('c_logo_kanan').value=d.logo_kanan||'';
 }
 
 async function saveConfig(){
@@ -1995,7 +2410,8 @@ async function saveConfig(){
     configs:{
       gdrive_folder_id:v('c_fid'),gdrive_folder_url:v('c_furl'),
       tahun:v('c_thn'),batas_lahir_min:v('c_lmin'),batas_lahir_max:v('c_lmax'),
-      cp_nama: v('c_cp_nama'), cp_nohp: v('c_cp_nohp'), cp_email: v('c_cp_email')
+      cp_nama: v('c_cp_nama'), cp_nohp: v('c_cp_nohp'), cp_email: v('c_cp_email'),
+      logo_kiri: v('c_logo_kiri'), logo_kanan: v('c_logo_kanan')
     }
   });
   lov(false);

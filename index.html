@@ -340,11 +340,11 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
 <div class="view active" id="view-beranda">
 
   <div class="hero">
-    <span class="hero-tag"><i class="fas fa-bolt"></i> Pendaftaran Dibuka</span>
+    <span class="hero-tag"><i class="fas fa-bolt"></i> Pendataan Dibuka</span>
     <h2>Jadilah Juara di <em>O2SN SD</em><br>Provinsi DKI Jakarta</h2>
-    <p>Portal resmi pendaftaran atlet dan pengumuman hasil pertandingan Olimpiade Olahraga Siswa Nasional jenjang Sekolah Dasar.</p>
+    <p>Portal resmi Pendataan atlet dan pengumuman hasil pertandingan Olimpiade Olahraga Siswa Nasional jenjang Sekolah Dasar.</p>
     <div class="hero-cta">
-      <button class="btn btn-coral" onclick="showView('form-daftar')"><i class="fas fa-user-plus"></i> Daftar Sekarang</button>
+      <button class="btn btn-coral" onclick="showView('form-daftar')"><i class="fas fa-user-plus"></i> Isi Data Sekarang</button>
       <button class="btn btn-ghostw" onclick="showView('cek-status')"><i class="fas fa-magnifying-glass"></i> Cek Status</button>
     </div>
   </div>
@@ -403,7 +403,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
   <div class="card">
     <div class="card-h">
       <div class="card-h-ico" style="background:var(--gold-soft);color:var(--gold)"><i class="fas fa-circle-info"></i></div>
-      <div><div class="card-h-t">Informasi Pendaftaran</div><div class="card-h-s">Baca sebelum mendaftar</div></div>
+      <div><div class="card-h-t">Informasi Pendataan</div><div class="card-h-s">Baca sebelum menginput data</div></div>
     </div>
     <div class="card-b">
       <div class="fgrid">
@@ -419,7 +419,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
         <div>
           <div class="b8 mb12" style="color:var(--coral)"><i class="fas fa-file-pdf"></i> Dokumen Wajib (PDF max 2MB)</div>
           <div class="sm" style="display:flex;flex-direction:column;gap:7px">
-            <div class="fxc g8"><i class="fas fa-file-pdf" style="color:var(--coral)"></i> Bukti Pendaftaran BPTI</div>
+            <div class="fxc g8"><i class="fas fa-file-pdf" style="color:var(--coral)"></i> Bukti Pendataan BPTI</div>
             <div class="fxc g8"><i class="fas fa-file-pdf" style="color:var(--coral)"></i> BPJS Ketenagakerjaan</div>
             <div class="fxc g8"><i class="fas fa-file-pdf" style="color:var(--coral)"></i> Surat Keterangan Sekolah</div>
             <div class="fxc g8"><i class="fas fa-file-pdf" style="color:var(--coral)"></i> Akta Kelahiran</div>
@@ -446,12 +446,12 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
   <div id="hasilContent"></div>
 </div>
 
-<!-- ════════════ VIEW: FORM DAFTAR ════════════ -->
-<div class="view" id="view-form-daftar">
+<!-- ════════════ VIEW: FORM PENDATAAN ════════════ -->
+<div class="view" id="view-form-pendataan">
   <div class="fxb mb20">
     <div>
-      <div class="xs mut mb6">Pendaftaran Online</div>
-      <h2 class="b8" style="font-size:22px;letter-spacing:-.4px">Form Pendaftaran Atlet</h2>
+      <div class="xs mut mb6">Pendataan Online</div>
+      <h2 class="b8" style="font-size:22px;letter-spacing:-.4px">Form Pendataan Atlet</h2>
     </div>
     <button class="btn btn-line btn-sm" onclick="showView('beranda')"><i class="fas fa-arrow-left"></i> Kembali</button>
   </div>
@@ -597,7 +597,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
           <label class="up-zone" id="z_bpti" for="file_bpti">
             <input type="file" id="file_bpti" accept="application/pdf" onchange="pickFile(event,'bpti')">
             <div class="up-ico" id="zi_bpti"><i class="fas fa-file-invoice"></i></div>
-            <div class="up-lbl">Bukti Pendaftaran BPTI</div>
+            <div class="up-lbl">Bukti Pendataan BPTI</div>
             <div class="up-hint">Klik untuk pilih file PDF</div>
             <div class="up-file" id="zf_bpti"></div>
             <div class="up-state" id="zs_bpti"></div>
@@ -633,7 +633,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
 
     <div class="fxb">
       <button class="btn btn-line" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i> Kembali</button>
-      <button class="btn btn-coral" id="btnSubmit" onclick="submitForm()"><i class="fas fa-paper-plane"></i> Kirim Pendaftaran</button>
+      <button class="btn btn-coral" id="btnSubmit" onclick="submitForm()"><i class="fas fa-paper-plane"></i> Kirim Pendataan</button>
     </div>
   </div>
 
@@ -641,13 +641,13 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
   <div id="fs4" style="display:none">
     <div class="success">
       <div class="big">🎉</div>
-      <h2 class="b8" style="font-size:22px;margin-bottom:8px">Pendaftaran Berhasil!</h2>
-      <p style="color:rgba(255,255,255,.85);font-size:13.5px;margin-bottom:14px">Simpan kode verifikasi ini untuk mengecek status pendaftaran Anda.</p>
+      <h2 class="b8" style="font-size:22px;margin-bottom:8px">Pendataan Berhasil!</h2>
+      <p style="color:rgba(255,255,255,.85);font-size:13.5px;margin-bottom:14px">Simpan kode verifikasi ini untuk mengecek status Pendataan Anda.</p>
       <div class="success-kode" id="rKode">--------</div>
       <div class="success-no" id="rNomor">Nomor Peserta: –</div>
       <div class="fx g12" style="justify-content:center;flex-wrap:wrap">
         <button class="btn btn-ghostw" onclick="printBukti()"><i class="fas fa-print"></i> Cetak Bukti</button>
-        <button class="btn" style="background:#fff;color:var(--teal-deep)" onclick="resetFormDaftarLagi()"><i class="fas fa-user-plus"></i> Daftar Peserta Lainnya</button>
+        <button class="btn" style="background:#fff;color:var(--teal-deep)" onclick="resetFormDaftarLagi()"><i class="fas fa-user-plus"></i> Input Peserta Lainnya</button>
         <button class="btn btn-ghostw" onclick="showView('beranda')"><i class="fas fa-house"></i> Beranda</button>
       </div>
     </div>
@@ -659,7 +659,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
   <div class="fxb mb20">
     <div>
       <div class="xs mut mb6">Peserta</div>
-      <h2 class="b8" style="font-size:22px">Cek Status Pendaftaran</h2>
+      <h2 class="b8" style="font-size:22px">Cek Status Pendataan</h2>
     </div>
     <button class="btn btn-line btn-sm" onclick="showView('beranda')"><i class="fas fa-arrow-left"></i> Kembali</button>
   </div>
@@ -728,11 +728,11 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
           <div class="stat-c"><div class="stat-ico" style="background:var(--red-soft);color:var(--red)"><i class="fas fa-triangle-exclamation"></i></div><div class="stat-n" id="sPerb">–</div><div class="stat-l">Perlu Perbaikan</div></div>
         </div>
         <div class="card">
-          <div class="card-h"><div class="card-h-ico" style="background:var(--teal-50);color:var(--teal)"><i class="fas fa-map-location-dot"></i></div><div class="card-h-t">Pendaftar per Wilayah</div></div>
+          <div class="card-h"><div class="card-h-ico" style="background:var(--teal-50);color:var(--teal)"><i class="fas fa-map-location-dot"></i></div><div class="card-h-t">Data per Wilayah</div></div>
           <div class="card-b" id="recWil"><p class="sm mut">Memuat...</p></div>
         </div>
         <div class="card">
-          <div class="card-h"><div class="card-h-ico" style="background:var(--coral-soft);color:var(--coral)"><i class="fas fa-trophy"></i></div><div class="card-h-t">Pendaftar per Cabor</div></div>
+          <div class="card-h"><div class="card-h-ico" style="background:var(--coral-soft);color:var(--coral)"><i class="fas fa-trophy"></i></div><div class="card-h-t">Data per Cabor</div></div>
           <div class="card-b" id="recCab"><p class="sm mut">Memuat...</p></div>
         </div>
       </div>
@@ -1257,7 +1257,7 @@ async function submitForm(){
   if(cats.length===0){sErr('kat','Pilih minimal 1 kategori');return}else sErr('kat','');
 
   document.getElementById('btnSubmit').disabled=true;
-  lov(true,'Mengirim data pendaftaran...');
+  lov(true,'Mengirim data Pendataan...');
 
   const res=await callGAS('daftarPeserta',{
     nisn:v('f_nisn'),nama_lengkap:v('f_nama').toUpperCase(),tanggal_lahir:v('f_tgl'),
@@ -1268,7 +1268,7 @@ async function submitForm(){
 
   if(!res||!res.success){
     lov(false);document.getElementById('btnSubmit').disabled=false;
-    toast(res?.message||'Pendaftaran gagal','error');return;
+    toast(res?.message||'Pendataan gagal','error');return;
   }
   regResult=res;
 
@@ -1294,7 +1294,7 @@ async function submitForm(){
   document.getElementById('rKode').textContent=res.kode_verifikasi;
   document.getElementById('rNomor').textContent='Nomor Peserta: '+res.nomor_peserta;
   goStep(4);
-  toast(allOk?'Pendaftaran lengkap berhasil!':'Terdaftar, tapi ada dokumen gagal upload — cek status nanti',allOk?'success':'error');
+  toast(allOk?'Pendataan lengkap berhasil!':'Terdaftar, tapi ada dokumen gagal upload — cek status nanti',allOk?'success':'error');
 }
 
 function toB64(file){
@@ -1375,7 +1375,7 @@ function printBukti(){
 
     <!-- JUDUL -->
     <div style="text-align:center;margin:18px 0">
-      <div style="font-size:15px;font-weight:800;text-decoration:underline;letter-spacing:.5px">BUKTI PENDAFTARAN PESERTA</div>
+      <div style="font-size:15px;font-weight:800;text-decoration:underline;letter-spacing:.5px">BUKTI Pendataan PESERTA</div>
       <div style="font-size:12px;margin-top:3px">Nomor: ${regResult.nomor_peserta}</div>
     </div>
 
@@ -1391,11 +1391,11 @@ function printBukti(){
       <tr><td style="${tdh}">Asal Wilayah</td><td style="${td};font-weight:700">${p.wil}</td></tr>
       <tr><td style="${tdh}">Cabang Olahraga</td><td style="${td};font-weight:700">${p.cab}</td></tr>
       <tr><td style="${tdh}">Guru Pendamping</td><td style="${td}">${p.pend}</td></tr>
-      <tr><td style="${tdh}">Status Pendaftaran</td><td style="${td};color:#B45309;font-weight:800">PENDING VERIFIKASI</td></tr>
-      <tr><td style="${tdh}">Waktu Pendaftaran Berkas</td><td style="${td}">${wktUpload} WIB</td></tr>
+      <tr><td style="${tdh}">Status Pendataan</td><td style="${td};color:#B45309;font-weight:800">PENDING VERIFIKASI</td></tr>
+      <tr><td style="${tdh}">Waktu Pendataan Berkas</td><td style="${td}">${wktUpload} WIB</td></tr>
     </table>
 
-    <p style="font-size:12px;color:#555;margin-top:12px;line-height:1.5;font-style:italic">Bukti ini sah sebagai tanda telah mendaftar. Status akhir keikutsertaan menunggu hasil verifikasi panitia. Mohon kode verifikasi disimpan untuk pengecekan status.</p>
+    <p style="font-size:12px;color:#555;margin-top:12px;line-height:1.5;font-style:italic">Bukti ini sah sebagai tanda telah menginput data. Status akhir keikutsertaan menunggu hasil verifikasi panitia. Mohon kode verifikasi disimpan untuk pengecekan status.</p>
 
     <!-- TITIMANGSA & TTD -->
     <div style="margin-top:50px;display:flex;justify-content:flex-end">
@@ -1405,7 +1405,7 @@ function printBukti(){
       </div>
     </div>
 
-    <p style="font-size:10px;color:#999;text-align:center;margin-top:30px;border-top:1px solid #ddd;padding-top:8px">Dokumen ini dicetak otomatis dari sistem pendaftaran online · KKG PJOK Provinsi DKI Jakarta</p>
+    <p style="font-size:10px;color:#999;text-align:center;margin-top:30px;border-top:1px solid #ddd;padding-top:8px">Dokumen ini dicetak otomatis dari sistem Pendataan online · KKG PJOK Provinsi DKI Jakarta</p>
   </div>`;
   window.print();
 }
@@ -1932,7 +1932,7 @@ function resetFormDaftarLagi(){
   document.getElementById('btnSubmit').disabled=false;
   // Kembali ke step 1
   goStep(1);
-  toast('Form direset. Silakan daftarkan peserta berikutnya','success');
+  toast('Form direset. Silakan menginput data peserta berikutnya','success');
 }
 
 // ═══════════ RESET CEK STATUS saat kembali ke beranda ═══════════

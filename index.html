@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>O2SN Jenjang SD/MI – Provinsi DKI Jakarta 2026 · Pendataan Peserta</title>
+<title>O2SN SD – Provinsi DKI Jakarta 2026 · Pendataan Peserta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -441,10 +441,6 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
     <div class="card-b" id="cpPanitiaBox">
       <p class="sm mut">Memuat...</p>
     </div>
-  </div>
-
-  <div class="tc" style="margin-top:44px;padding-top:20px;border-top:1px solid var(--line)">
-    <p class="xs mut">© 2026 <strong>KKG PJOK Provinsi DKI Jakarta</strong> &times; <strong>Gurumasakini</strong>. Hak cipta dilindungi.</p>
   </div>
 </div>
 
@@ -939,6 +935,11 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
 
 </div><!-- /wrap -->
 
+<!-- ✨ GLOBAL FOOTER — muncul di semua view -->
+<footer style="background:#fff;border-top:1px solid var(--line);padding:20px 16px;text-align:center;margin-top:40px">
+  <p class="xs mut">© 2026 <strong>KKG PJOK Provinsi DKI Jakarta</strong> &times; <strong>Gurumasakini</strong>. Hak cipta dilindungi.</p>
+</footer>
+
 <!-- ════ MODAL VERIFIKASI ════ -->
 <div class="mbg" id="mVerif">
   <div class="mbox wide">
@@ -1401,7 +1402,7 @@ async function cekStatus(){
   //        FALSE = admin uncheck (file salah, harus upload ulang) atau belum submit
   const statBadge=(v)=>{
     if(v===true) return '<span class="bdg bdg-ok"><i class="fas fa-check-circle"></i> Diterima</span>';
-    return '<span class="bdg bdg-x"><i class="fas fa-times-circle"></i> Perlu diunggah ulang</span>';
+    return '<span class="bdg bdg-p"><i class="fas fa-clock"></i> Menunggu verifikasi panitia</span>';
   };
   const dr=(l,v)=>`<div class="sdoc"><span>${l}</span>${statBadge(v)}</div>`;
 

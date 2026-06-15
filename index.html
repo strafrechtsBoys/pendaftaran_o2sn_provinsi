@@ -84,6 +84,59 @@ input,select,textarea{font-family:inherit}
 .hero p{font-size:14.5px;color:rgba(255,255,255,.82);max-width:480px;margin-bottom:26px}
 .hero-cta{display:flex;gap:12px;flex-wrap:wrap;position:relative;z-index:2}
 
+/* ════ RUNNING TEXT (Marquee) ════ */
+.ticker-wrap{
+  background:linear-gradient(90deg,var(--coral) 0%,#FB923C 50%,var(--gold) 100%);
+  border-radius:14px;overflow:hidden;
+  padding:0;margin-bottom:24px;
+  box-shadow:var(--sh-sm);position:relative;
+}
+.ticker-wrap::before,.ticker-wrap::after{
+  content:'';position:absolute;top:0;bottom:0;width:50px;z-index:2;pointer-events:none;
+}
+.ticker-wrap::before{left:0;background:linear-gradient(90deg,var(--coral),transparent)}
+.ticker-wrap::after{right:0;background:linear-gradient(-90deg,var(--gold),transparent)}
+.ticker-label{
+  background:rgba(255,255,255,.95);color:var(--coral);
+  padding:10px 16px;font-weight:800;font-size:12px;
+  letter-spacing:.5px;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:7px;
+  position:absolute;left:0;top:0;bottom:0;z-index:3;
+}
+.ticker-content{
+  display:flex;overflow:hidden;
+  padding:13px 0 13px 130px;
+}
+.ticker-track{
+  display:inline-flex;white-space:nowrap;
+  animation:tickerScroll 40s linear infinite;
+}
+.ticker-track:hover{animation-play-state:paused}
+.ticker-item{
+  color:#fff;font-weight:700;font-size:13.5px;
+  padding:0 50px;display:inline-flex;align-items:center;gap:10px;
+}
+.ticker-item i{font-size:11px;opacity:.85}
+@keyframes tickerScroll{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+/* ════ VENUE CARDS ════ */
+.venue-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.venue-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:16px;transition:all .2s;
+}
+.venue-card:hover{box-shadow:var(--sh-sm);border-color:var(--teal-100)}
+.venue-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.venue-ico{width:34px;height:34px;background:var(--teal-50);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.venue-name{font-size:13px;font-weight:800}
+.venue-addr{font-size:12px;color:var(--ink-2);line-height:1.5;margin-bottom:10px;min-height:36px}
+.venue-empty{font-size:11.5px;color:var(--ink-3);font-style:italic}
+.venue-maps-btn{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--teal-dark);background:var(--teal-50);padding:6px 12px;border-radius:999px;border:1px solid var(--teal-100);transition:all .2s}
+.venue-maps-btn:hover{background:var(--teal-100);transform:translateY(-1px)}
+
 /* ════ MEDAL TALLY ════ */
 .medal-sec{margin-bottom:26px}
 .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
@@ -344,8 +397,18 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
     <h2>Jadilah Juara di <em>O2SN SD</em><br>Provinsi DKI Jakarta</h2>
     <p>Portal resmi pendataan atlet dan pengumuman hasil pertandingan Olimpiade Olahraga Siswa Nasional jenjang Sekolah Dasar Provinsi DKI Jakarta.</p>
     <div class="hero-cta">
-      <button class="btn btn-coral" onclick="showView('form-daftar')"><i class="fas fa-user-plus"></i> Isi Data Peserta Sekarang</button>
+      <button class="btn btn-coral" onclick="showView('form-daftar')"><i class="fas fa-user-plus"></i> Isi Data Peserta</button>
       <button class="btn btn-ghostw" onclick="showView('cek-status')"><i class="fas fa-magnifying-glass"></i> Cek Status Pendataan</button>
+    </div>
+  </div>
+
+  <!-- ✨ RUNNING TEXT PENGUMUMAN -->
+  <div class="ticker-wrap" id="tickerBox">
+    <div class="ticker-label"><i class="fas fa-bullhorn"></i> Pengumuman</div>
+    <div class="ticker-content">
+      <div class="ticker-track" id="tickerTrack">
+        <span class="ticker-item"><i class="fas fa-circle"></i> Memuat pengumuman...</span>
+      </div>
     </div>
   </div>
 
@@ -425,6 +488,22 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
             <div class="fxc g8"><i class="fas fa-file-pdf" style="color:var(--coral)"></i> Akta Kelahiran</div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✨ VENUE PERTANDINGAN -->
+  <div class="card">
+    <div class="card-h">
+      <div class="card-h-ico" style="background:var(--teal-50);color:var(--teal)"><i class="fas fa-map-location-dot"></i></div>
+      <div>
+        <div class="card-h-t">Venue Pertandingan</div>
+        <div class="card-h-s">Lokasi pertandingan tiap cabang olahraga</div>
+      </div>
+    </div>
+    <div class="card-b">
+      <div class="venue-grid" id="venueGrid">
+        <p class="sm mut">Memuat...</p>
       </div>
     </div>
   </div>
@@ -1098,6 +1177,38 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
             </div>
           </div>
         </div>
+
+        <!-- ✨ Running Text Pengumuman -->
+        <div class="card">
+          <div class="card-h">
+            <div class="card-h-ico" style="background:#FFEDD5;color:var(--coral)"><i class="fas fa-bullhorn"></i></div>
+            <div>
+              <div class="card-h-t">Running Text Pengumuman</div>
+              <div class="card-h-s">Akan berjalan di atas tabel medali. Pisahkan beberapa pengumuman dengan <code>||</code> (dua garis vertikal)</div>
+            </div>
+          </div>
+          <div class="card-b">
+            <div class="fg">
+              <label>Teks Pengumuman</label>
+              <textarea id="c_running_text" class="fc" rows="3" placeholder="Contoh: Pengumuman 1 || Pendataan ditutup 30 April 2026 || Technical Meeting tanggal 5 Mei 2026"></textarea>
+              <div class="fhint">Pisahkan tiap pengumuman dengan <code>||</code> agar tampil sebagai item terpisah di running text</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ✨ Venue Pertandingan -->
+        <div class="card">
+          <div class="card-h">
+            <div class="card-h-ico" style="background:var(--teal-50);color:var(--teal)"><i class="fas fa-map-location-dot"></i></div>
+            <div>
+              <div class="card-h-t">Venue Pertandingan per Cabor</div>
+              <div class="card-h-s">Isi alamat lengkap + link Google Maps (klik Share → Copy link di Google Maps)</div>
+            </div>
+          </div>
+          <div class="card-b">
+            <div id="venueInputBox"></div>
+          </div>
+        </div>
         <div class="fx g10">
           <button class="btn btn-teal" onclick="saveConfig()"><i class="fas fa-save"></i> Simpan</button>
           <button class="btn btn-line" onclick="testKoneksi()"><i class="fas fa-plug"></i> Test Koneksi GAS</button>
@@ -1241,7 +1352,55 @@ async function loadCPPanitia(){
   if(res && res.success && res.data){
     sysConfig = res.data;
     renderCPPanitia(res.data);
+    renderRunningText(res.data);
+    renderVenue(res.data);
   }
+}
+
+// ✨ Render Running Text — duplikasi konten agar scroll seamless
+function renderRunningText(cfg){
+  const track = document.getElementById('tickerTrack');
+  if(!track) return;
+  const raw = cfg.running_text || 'Selamat datang di portal pendataan O2SN SD Provinsi DKI Jakarta 2026';
+  const items = raw.split('||').map(s=>s.trim()).filter(Boolean);
+  if(items.length===0){
+    track.innerHTML='<span class="ticker-item"><i class="fas fa-info-circle"></i> Tidak ada pengumuman</span>';
+    return;
+  }
+  // Duplikasi 2x untuk efek loop seamless
+  const itemsHTML = items.map(t=>`<span class="ticker-item"><i class="fas fa-circle"></i> ${escapeHtml(t)}</span>`).join('');
+  track.innerHTML = itemsHTML + itemsHTML;
+}
+
+function escapeHtml(s){
+  const div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+// ✨ Render Venue per Cabor
+function renderVenue(cfg){
+  const box = document.getElementById('venueGrid');
+  if(!box) return;
+  const cabors = [
+    {key:'renang',      label:'Renang',       ico:'🏊'},
+    {key:'atletik',     label:'Atletik',      ico:'🏃'},
+    {key:'bulutangkis', label:'Bulutangkis',  ico:'🏸'},
+    {key:'silat',       label:'Pencak Silat', ico:'🥋'},
+    {key:'senam',       label:'Senam',        ico:'🤸'}
+  ];
+  box.innerHTML = cabors.map(c=>{
+    const addr = cfg['venue_'+c.key] || '';
+    const maps = cfg['venue_'+c.key+'_maps'] || '';
+    return `<div class="venue-card">
+      <div class="venue-head">
+        <div class="venue-ico">${c.ico}</div>
+        <div class="venue-name">${c.label}</div>
+      </div>
+      <div class="venue-addr">${addr ? escapeHtml(addr) : '<span class="venue-empty">Alamat venue belum diset</span>'}</div>
+      ${maps ? `<a class="venue-maps-btn" href="${escapeHtml(maps)}" target="_blank"><i class="fas fa-map-marker-alt"></i> Lihat di Google Maps</a>` : ''}
+    </div>`;
+  }).join('');
 }
 
 function renderCPPanitia(cfg){
@@ -2401,6 +2560,39 @@ async function loadAdminConfig(){
   // ✨ Logo kop bukti
   document.getElementById('c_logo_kiri').value=d.logo_kiri||'';
   document.getElementById('c_logo_kanan').value=d.logo_kanan||'';
+  // ✨ Running text
+  const rt=document.getElementById('c_running_text');
+  if(rt) rt.value=d.running_text||'';
+  // ✨ Venue inputs
+  renderVenueInputs(d);
+}
+
+function renderVenueInputs(d){
+  const box=document.getElementById('venueInputBox');
+  if(!box) return;
+  const cabors=[
+    {key:'renang',label:'Renang',ico:'🏊'},
+    {key:'atletik',label:'Atletik',ico:'🏃'},
+    {key:'bulutangkis',label:'Bulutangkis',ico:'🏸'},
+    {key:'silat',label:'Pencak Silat',ico:'🥋'},
+    {key:'senam',label:'Senam',ico:'🤸'}
+  ];
+  box.innerHTML = cabors.map(c=>`
+    <div style="background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px">
+      <div class="b8 mb12" style="font-size:13.5px">${c.ico} ${c.label}</div>
+      <div class="fgrid">
+        <div class="fg span2">
+          <label>Alamat Lengkap Venue</label>
+          <input type="text" id="c_venue_${c.key}" class="fc" placeholder="Contoh: GOR Soemantri Brodjonegoro, Jl. HR. Rasuna Said, Kuningan, Jakarta Selatan" value="${(d['venue_'+c.key]||'').replace(/"/g,'&quot;')}">
+        </div>
+        <div class="fg span2">
+          <label>Link Google Maps</label>
+          <input type="url" id="c_venue_${c.key}_maps" class="fc" placeholder="https://maps.google.com/..." value="${(d['venue_'+c.key+'_maps']||'').replace(/"/g,'&quot;')}">
+          <div class="fhint">Di Google Maps: klik Share → Copy link → paste di sini</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
 }
 
 async function saveConfig(){
@@ -2411,7 +2603,18 @@ async function saveConfig(){
       gdrive_folder_id:v('c_fid'),gdrive_folder_url:v('c_furl'),
       tahun:v('c_thn'),batas_lahir_min:v('c_lmin'),batas_lahir_max:v('c_lmax'),
       cp_nama: v('c_cp_nama'), cp_nohp: v('c_cp_nohp'), cp_email: v('c_cp_email'),
-      logo_kiri: v('c_logo_kiri'), logo_kanan: v('c_logo_kanan')
+      logo_kiri: v('c_logo_kiri'), logo_kanan: v('c_logo_kanan'),
+      running_text: (document.getElementById('c_running_text')?.value||'').trim(),
+      venue_renang:           v('c_venue_renang'),
+      venue_renang_maps:      v('c_venue_renang_maps'),
+      venue_atletik:          v('c_venue_atletik'),
+      venue_atletik_maps:     v('c_venue_atletik_maps'),
+      venue_bulutangkis:      v('c_venue_bulutangkis'),
+      venue_bulutangkis_maps: v('c_venue_bulutangkis_maps'),
+      venue_silat:            v('c_venue_silat'),
+      venue_silat_maps:       v('c_venue_silat_maps'),
+      venue_senam:            v('c_venue_senam'),
+      venue_senam_maps:       v('c_venue_senam_maps')
     }
   });
   lov(false);

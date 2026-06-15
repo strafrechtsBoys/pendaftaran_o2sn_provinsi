@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>O2SN Jenjang SD/MI – Provinsi DKI Jakarta 2026 · Pendataan Peserta</title>
+<title>O2SN SD – Provinsi DKI Jakarta 2026 · Pendataan Peserta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -122,20 +122,59 @@ input,select,textarea{font-family:inherit}
   to{transform:translateX(-50%)}
 }
 
-/* ════ VENUE CARDS ════ */
-.venue-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-.venue-card{
-  background:var(--card);border:1px solid var(--line);
-  border-radius:14px;padding:16px;transition:all .2s;
+/* ════ VENUE ACCORDION ════ */
+.venue-accordion{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden}
+.venue-acc-item{border-bottom:1px solid var(--line)}
+.venue-acc-item:last-child{border-bottom:none}
+.venue-acc-trigger{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;background:var(--card);
+  cursor:pointer;border:none;font-family:inherit;
+  transition:background .18s;text-align:left;
+  gap:12px;
 }
-.venue-card:hover{box-shadow:var(--sh-sm);border-color:var(--teal-100)}
-.venue-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.venue-ico{width:34px;height:34px;background:var(--teal-50);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.venue-name{font-size:13px;font-weight:800}
-.venue-addr{font-size:12px;color:var(--ink-2);line-height:1.5;margin-bottom:10px;min-height:36px}
-.venue-empty{font-size:11.5px;color:var(--ink-3);font-style:italic}
-.venue-maps-btn{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:var(--teal-dark);background:var(--teal-50);padding:6px 12px;border-radius:999px;border:1px solid var(--teal-100);transition:all .2s}
-.venue-maps-btn:hover{background:var(--teal-100);transform:translateY(-1px)}
+.venue-acc-trigger:hover{background:var(--teal-50)}
+.venue-acc-trigger.open{background:var(--teal-50)}
+.venue-acc-left{display:flex;align-items:center;gap:12px}
+.venue-acc-ico{
+  width:36px;height:36px;background:var(--teal-100);
+  border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex-shrink:0;
+}
+.venue-acc-trigger.open .venue-acc-ico{background:var(--teal);color:#fff}
+.venue-acc-label{font-size:13.5px;font-weight:800;color:var(--ink)}
+.venue-acc-badge{
+  font-size:10.5px;font-weight:700;padding:3px 9px;
+  border-radius:999px;margin-left:6px;
+}
+.venue-badge-set{background:var(--green-soft);color:var(--green)}
+.venue-badge-empty{background:var(--bg);color:var(--ink-3)}
+.venue-acc-chevron{
+  font-size:13px;color:var(--ink-3);
+  transition:transform .3s;flex-shrink:0;
+}
+.venue-acc-trigger.open .venue-acc-chevron{transform:rotate(180deg);color:var(--teal)}
+.venue-acc-body{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s cubic-bezier(.4,0,.2,1), padding .25s;
+  background:#fff;
+}
+.venue-acc-body.open{max-height:200px}
+.venue-acc-inner{padding:12px 18px 18px 66px}
+.venue-acc-addr{
+  font-size:13px;color:var(--ink-2);line-height:1.6;
+  margin-bottom:12px;
+}
+.venue-empty{font-size:12px;color:var(--ink-3);font-style:italic;padding:12px 18px 16px 66px}
+.venue-maps-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:12px;font-weight:700;
+  color:var(--teal-dark);background:var(--teal-50);
+  padding:8px 16px;border-radius:999px;
+  border:1.5px solid var(--teal-100);transition:all .2s;
+}
+.venue-maps-btn:hover{background:var(--teal-100);transform:translateY(-1px);box-shadow:var(--sh-sm)}
+.venue-maps-btn i{color:var(--coral)}
 
 /* ════ MEDAL TALLY ════ */
 .medal-sec{margin-bottom:26px}
@@ -397,7 +436,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
     <h2>Jadilah Juara di <em>O2SN SD</em><br>Provinsi DKI Jakarta</h2>
     <p>Portal resmi pendataan atlet dan pengumuman hasil pertandingan Olimpiade Olahraga Siswa Nasional jenjang Sekolah Dasar Provinsi DKI Jakarta.</p>
     <div class="hero-cta">
-      <button class="btn btn-coral" onclick="showView('form-daftar')"><i class="fas fa-user-plus"></i> Isi Data Peserta</button>
+      <button class="btn btn-coral" onclick="showView('form-daftar')"><i class="fas fa-user-plus"></i> Isi Data Peserta Sekarang</button>
       <button class="btn btn-ghostw" onclick="showView('cek-status')"><i class="fas fa-magnifying-glass"></i> Cek Status Pendataan</button>
     </div>
   </div>
@@ -1378,7 +1417,7 @@ function escapeHtml(s){
   return div.innerHTML;
 }
 
-// ✨ Render Venue per Cabor
+// ✨ Render Venue — Accordion Style
 function renderVenue(cfg){
   const box = document.getElementById('venueGrid');
   if(!box) return;
@@ -1389,18 +1428,57 @@ function renderVenue(cfg){
     {key:'silat',       label:'Pencak Silat', ico:'🥋'},
     {key:'senam',       label:'Senam',        ico:'🤸'}
   ];
-  box.innerHTML = cabors.map(c=>{
-    const addr = cfg['venue_'+c.key] || '';
-    const maps = cfg['venue_'+c.key+'_maps'] || '';
-    return `<div class="venue-card">
-      <div class="venue-head">
-        <div class="venue-ico">${c.ico}</div>
-        <div class="venue-name">${c.label}</div>
-      </div>
-      <div class="venue-addr">${addr ? escapeHtml(addr) : '<span class="venue-empty">Alamat venue belum diset</span>'}</div>
-      ${maps ? `<a class="venue-maps-btn" href="${escapeHtml(maps)}" target="_blank"><i class="fas fa-map-marker-alt"></i> Lihat di Google Maps</a>` : ''}
-    </div>`;
+
+  // Bungkus semua dalam div accordion
+  const itemsHTML = cabors.map((cab,idx) => {
+    const addr = cfg['venue_'+cab.key] || '';
+    const maps = cfg['venue_'+cab.key+'_maps'] || '';
+    const hasAddr = addr.trim() !== '';
+    const badgeCls = hasAddr ? 'venue-badge-set' : 'venue-badge-empty';
+    const badgeTxt = hasAddr ? 'Sudah diset' : 'Belum diset';
+
+    const body = hasAddr ? `
+      <div class="venue-acc-inner">
+        <div class="venue-acc-addr">${escapeHtml(addr)}</div>
+        ${maps ? `<a class="venue-maps-btn" href="${escapeHtml(maps)}" target="_blank">
+          <i class="fas fa-map-marker-alt"></i> Buka Google Maps
+        </a>` : ''}
+      </div>` :
+      `<div class="venue-empty"><i class="fas fa-clock"></i> Alamat venue belum diinput oleh panitia.</div>`;
+
+    return `
+      <div class="venue-acc-item">
+        <button class="venue-acc-trigger" onclick="toggleVenue(${idx})" id="vtrig_${idx}">
+          <div class="venue-acc-left">
+            <div class="venue-acc-ico">${cab.ico}</div>
+            <div>
+              <div class="venue-acc-label">${cab.label}</div>
+            </div>
+            <span class="venue-acc-badge ${badgeCls}">${badgeTxt}</span>
+          </div>
+          <i class="fas fa-chevron-down venue-acc-chevron" id="vchev_${idx}"></i>
+        </button>
+        <div class="venue-acc-body" id="vbody_${idx}">${body}</div>
+      </div>`;
   }).join('');
+
+  box.innerHTML = `<div class="venue-accordion">${itemsHTML}</div>`;
+}
+
+function toggleVenue(idx){
+  const trig = document.getElementById('vtrig_'+idx);
+  const body = document.getElementById('vbody_'+idx);
+  const isOpen = trig.classList.contains('open');
+
+  // Tutup semua dulu
+  document.querySelectorAll('.venue-acc-trigger').forEach(t=>t.classList.remove('open'));
+  document.querySelectorAll('.venue-acc-body').forEach(b=>b.classList.remove('open'));
+
+  // Toggle yang diklik
+  if(!isOpen){
+    trig.classList.add('open');
+    body.classList.add('open');
+  }
 }
 
 function renderCPPanitia(cfg){

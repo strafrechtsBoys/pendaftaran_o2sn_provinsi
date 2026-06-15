@@ -1824,7 +1824,7 @@ async function submitForm(){
   document.getElementById('rKode').textContent=res.kode_verifikasi;
   document.getElementById('rNomor').textContent='Nomor Peserta: '+res.nomor_peserta;
   goStep(4);
-  toast(allOk?'Pendataan lengkap berhasil!':'Terdata, tapi ada dokumen gagal upload — cek status nanti',allOk?'success':'error');
+  toast(allOk?'Pendataan lengkap berhasil!':'Terdata, cek status upload akan diverifikasi panitia — cek status nanti',allOk?'success':'error');
 }
 
 function toB64(file){

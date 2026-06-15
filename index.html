@@ -197,14 +197,32 @@ input,select,textarea{font-family:inherit}
 
 /* ════ CABOR CARDS ════ */
 .cabor-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:26px}
-.cb-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);padding:22px 14px;text-align:center;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
-.cb-card:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:var(--teal-100)}
+.cb-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:20px 16px;text-align:center;
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.cb-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md);border-color:var(--teal-100)}
 .cb-ico{width:54px;height:54px;margin:0 auto 12px;background:var(--teal-50);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px}
-.cb-name{font-size:13.5px;font-weight:800;letter-spacing:-.2px}
-.cb-cnt{font-size:11px;color:var(--ink-3);margin-top:3px}
-.cb-stat{margin-top:10px;font-size:10.5px;font-weight:700;display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px}
-.cb-on{background:var(--green-soft);color:var(--green)}
-.cb-off{background:var(--bg);color:var(--ink-3)}
+.cb-name{font-size:13.5px;font-weight:800;letter-spacing:-.2px;margin-bottom:14px}
+.cb-stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  border-top:1px solid var(--line);padding-top:12px;margin-top:8px;
+}
+.cb-stat-box{
+  background:var(--bg);border-radius:8px;
+  padding:7px 4px;
+}
+.cb-stat-num{font-size:18px;font-weight:800;line-height:1;color:var(--teal-dark)}
+.cb-stat-num.coral{color:var(--coral)}
+.cb-stat-lbl{font-size:9.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.4px;margin-top:3px;font-weight:700}
+.cb-total{
+  margin-top:10px;padding:8px 10px;
+  background:linear-gradient(135deg,var(--teal-50),var(--teal-100));
+  border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.cb-total-lbl{font-size:10px;font-weight:700;color:var(--teal-deep);text-transform:uppercase;letter-spacing:.4px}
+.cb-total-num{font-size:16px;font-weight:800;color:var(--teal-deep)}
 
 /* ════ PORTAL ════ */
 .portal{background:linear-gradient(120deg,#FFF7ED, #FFFBEB);border:1px solid #FED7AA;border-radius:var(--r-lg);padding:24px;margin-bottom:26px}
@@ -482,7 +500,7 @@ table.t{width:100%;border-collapse:collapse;font-size:12.5px}
   <div class="sec-head">
     <div>
       <div class="sec-title">Cabang Olahraga</div>
-      <div class="sec-sub">Klik kartu untuk melihat hasil pertandingan</div>
+      <div class="sec-sub">Jumlah atlet terdaftar per cabang olahraga</div>
     </div>
   </div>
   <div class="cabor-grid" id="caborGrid"></div>
@@ -1379,6 +1397,7 @@ async function loadPublik(){
   }
   // Sisipkan jumlah peserta per cabor
   pubData.per_cabor = (resStat && resStat.success) ? (resStat.data.per_cabor||{}) : {};
+  pubData.per_cabor_gender = (resStat && resStat.success) ? (resStat.data.per_cabor_gender||{}) : {};
   renderMedali();
   renderCaborCards();
   renderPortal();
@@ -1538,18 +1557,26 @@ function renderMedali(){
 }
 
 function renderCaborCards(){
-  const onMap={};
-  (pubData.settings||[]).forEach(s=>onMap[s.cabor]=s.hasil_on);
-  const cntMap=pubData.per_cabor||{};
-  document.getElementById('caborGrid').innerHTML=CABOR_LIST.map(c=>{
-    const on=onMap[c]===true;
-    const cnt=cntMap[c]||0;
-    return `<div class="cb-card" onclick="openHasil('${c}')">
+  // ✨ Pakai breakdown per cabor × gender dari getStatistik
+  const cbg = pubData.per_cabor_gender || {};
+  document.getElementById('caborGrid').innerHTML = CABOR_LIST.map(c => {
+    const data = cbg[c] || { Putra: 0, Putri: 0, total: 0 };
+    return `<div class="cb-card">
       <div class="cb-ico">${CABOR_ICON[c]}</div>
       <div class="cb-name">${c}</div>
-      <div class="cb-cnt"><i class="fas fa-users" style="font-size:10px"></i> ${cnt} Atlet Terdaftar</div>
-      <div class="cb-stat ${on?'cb-on':'cb-off'}">
-        <i class="fas fa-${on?'circle-check':'clock'}"></i> ${on?'Hasil Tersedia':'Menunggu'}
+      <div class="cb-stats">
+        <div class="cb-stat-box">
+          <div class="cb-stat-num">${data.Putra}</div>
+          <div class="cb-stat-lbl">♂ Putra</div>
+        </div>
+        <div class="cb-stat-box">
+          <div class="cb-stat-num coral">${data.Putri}</div>
+          <div class="cb-stat-lbl">♀ Putri</div>
+        </div>
+      </div>
+      <div class="cb-total">
+        <span class="cb-total-lbl">Total Atlet</span>
+        <span class="cb-total-num">${data.total}</span>
       </div>
     </div>`;
   }).join('');
